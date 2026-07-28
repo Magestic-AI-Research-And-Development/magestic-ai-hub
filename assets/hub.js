@@ -25,23 +25,42 @@
   const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   function gateMsg(t, ok){ const m = document.getElementById("gateMsg"); if (m) { m.textContent = t; m.className = "hub-msg" + (ok ? " ok" : " err"); } }
   function showGate(show){ const g = document.getElementById("authGate"); if (g) g.hidden = !show; document.body.style.overflow = show ? "hidden" : ""; }
+  // Direct-fetch sign-in: bypasses the supabase-js auth path (which can deadlock on GitHub
+  // Pages, leaving the button stuck on "Signing in…"). A plain fetch cannot hang the UI, and
+  // we reveal the app the instant the token comes back — before any SDK call runs.
   async function doSignIn(emailId, passId, report, onOk){
     const email = (document.getElementById(emailId).value || "").trim().toLowerCase();
     const pass = document.getElementById(passId).value;
     if (!email.endsWith("@" + TEAM_DOMAIN)) return report(`Use your @${TEAM_DOMAIN} email address.`);
     if (!pass) return report("Enter the team password.");
     report("Signing in…", true);
-    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-    if (!error) { onOk(); return; }
-    if (/email not confirmed/i.test(error.message)) return report("Your email isn't confirmed yet — check your inbox for the confirmation link, then sign in again.");
-    if (/invalid login credentials/i.test(error.message)) {
-      const { data, error: e2 } = await sb.auth.signUp({ email, password: pass, options: { emailRedirectTo: location.origin + location.pathname } });
-      if (e2) return report(/restricted to @/i.test(e2.message) ? `Signups are restricted to @${TEAM_DOMAIN} addresses.` : e2.message);
-      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0)
-        return report("An account already exists for this email — check the password, or look for an earlier confirmation email.");
-      return report("Account created. Check your inbox and click the confirmation link, then sign in.", true);
+    const H = { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY };
+    let res, data;
+    try {
+      res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", { method: "POST", headers: H, body: JSON.stringify({ email, password: pass }) });
+      data = await res.json();
+    } catch (e) { return report("Network error — check your connection and try again."); }
+    if (res.ok && data.access_token) {
+      user = data.user; renderAuthBox(); onOk();           // reveal immediately
+      try { await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token }); } catch (e) {}
+      setTimeout(refreshData, 0);
+      return;
     }
-    report(error.message);
+    const emsg = (data && (data.error_description || data.msg || data.error_code || data.error)) || "";
+    if (/not confirmed/i.test(emsg)) return report("Your email isn't confirmed yet — check your inbox for the link, then sign in.");
+    if (res.status === 400 || /invalid|credentials/i.test(emsg)) {
+      // No confirmed account with these credentials — try to create one.
+      let su, sud;
+      try {
+        su = await fetch(SUPABASE_URL + "/auth/v1/signup", { method: "POST", headers: H, body: JSON.stringify({ email, password: pass, options: { emailRedirectTo: location.origin + location.pathname } }) });
+        sud = await su.json();
+      } catch (e) { return report("Network error — try again."); }
+      if (!su.ok) return report(/restricted to @|domain/i.test(sud.msg || sud.error_description || "") ? `Signups are restricted to @${TEAM_DOMAIN} addresses.` : (sud.msg || sud.error_description || "Sign-up failed — check the password."));
+      if (sud.user && Array.isArray(sud.user.identities) && sud.user.identities.length === 0)
+        return report("An account already exists — check the password, or look for an earlier confirmation email.");
+      return report("Account created. Check your inbox for the confirmation link, then sign in.", true);
+    }
+    report(emsg || "Sign-in failed — try again.");
   }
   const nameFromEmail = e => e.split("@")[0].split(/[._-]+/).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
   const initialsOf = n => n.split(/\s+/).map(w => w[0]).slice(0,2).join("").toUpperCase();
