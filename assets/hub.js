@@ -36,10 +36,14 @@
     report("Signing in…", true);
     const H = { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY };
     let res, data;
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("__timeout__")), 8000));
     try {
-      res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", { method: "POST", headers: H, body: JSON.stringify({ email, password: pass }) });
+      res = await Promise.race([fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", { method: "POST", headers: H, body: JSON.stringify({ email, password: pass }) }), timeout]);
       data = await res.json();
-    } catch (e) { return report("Network error — check your connection and try again."); }
+    } catch (e) {
+      if (e && e.message === "__timeout__") return report("Sign-in is taking too long — a browser extension (often a crypto-wallet extension) may be blocking the page. Try an incognito window, a different browser, or disabling extensions.");
+      return report("Network error — check your connection and try again.");
+    }
     if (res.ok && data.access_token) {
       user = data.user; renderAuthBox(); onOk();           // reveal immediately
       try { await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token }); } catch (e) {}
