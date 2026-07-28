@@ -6,7 +6,17 @@
   const SUPABASE_URL = "https://hrcjcyqocyjrrxevdkyx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_InMVK8A61MlW0BgEmrFO7w_3NECV1TA";
   const TEAM_DOMAIN = "magestictech.com";
-  if (typeof supabase === "undefined") { console.warn("supabase-js not loaded; team features disabled"); return; }
+  if (typeof supabase === "undefined") {
+    // The Supabase CDN script didn't load (network/firewall). Rather than silently break the
+    // sign-in button, show a clear message on the gate so the failure is diagnosable.
+    console.warn("supabase-js not loaded; team features disabled");
+    window.HUB = window.HUB || {};
+    const notLoaded = () => { const m = document.getElementById("gateMsg"); if (m) { m.textContent = "Couldn't load the sign-in library (a network filter or extension may be blocking cdn.jsdelivr.net). Try another network or browser."; m.className = "hub-msg err"; } };
+    window.HUB.gateSubmit = notLoaded; window.HUB.submit = notLoaded;
+    window.HUB.openModal = () => {}; window.HUB.toggleSave = () => false; window.HUB.toggleShare = () => false;
+    window.HUB.openSend = () => false; window.HUB.toggleComments = () => false; window.HUB.decorate = () => {}; window.HUB.isSaved = () => false;
+    return;
+  }
   // Disable the Web Locks coordination: on GitHub Pages the UMD build can deadlock
   // (auth request completes server-side with 200 but the client promise never resolves,
   // leaving sign-in stuck). A pass-through lock runs the callback immediately and avoids it.
@@ -45,7 +55,12 @@
       return report("Network error — check your connection and try again.");
     }
     if (res.ok && data.access_token) {
-      user = data.user; renderAuthBox(); onOk();           // reveal immediately
+      // reveal immediately, bulletproof: hide gate first, then non-critical UI in try/catch
+      user = data.user;
+      const g = document.getElementById("authGate"); if (g) g.remove();
+      document.body.style.overflow = "";
+      try { renderAuthBox(); } catch (e) {}
+      try { onOk(); } catch (e) {}
       try { await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token }); } catch (e) {}
       setTimeout(refreshData, 0);
       return;
