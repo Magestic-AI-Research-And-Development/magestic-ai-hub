@@ -18,6 +18,26 @@
   let inbox = [];            // posts sent directly to me
 
   const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  function gateMsg(t, ok){ const m = document.getElementById("gateMsg"); if (m) { m.textContent = t; m.className = "hub-msg" + (ok ? " ok" : " err"); } }
+  function showGate(show){ const g = document.getElementById("authGate"); if (g) g.hidden = !show; document.body.style.overflow = show ? "hidden" : ""; }
+  async function doSignIn(emailId, passId, report, onOk){
+    const email = (document.getElementById(emailId).value || "").trim().toLowerCase();
+    const pass = document.getElementById(passId).value;
+    if (!email.endsWith("@" + TEAM_DOMAIN)) return report(`Use your @${TEAM_DOMAIN} email address.`);
+    if (!pass) return report("Enter the team password.");
+    report("Signing in…", true);
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (!error) { onOk(); return; }
+    if (/email not confirmed/i.test(error.message)) return report("Your email isn't confirmed yet — check your inbox for the confirmation link, then sign in again.");
+    if (/invalid login credentials/i.test(error.message)) {
+      const { data, error: e2 } = await sb.auth.signUp({ email, password: pass, options: { emailRedirectTo: location.origin + location.pathname } });
+      if (e2) return report(/restricted to @/i.test(e2.message) ? `Signups are restricted to @${TEAM_DOMAIN} addresses.` : e2.message);
+      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0)
+        return report("An account already exists for this email — check the password, or look for an earlier confirmation email.");
+      return report("Account created. Check your inbox and click the confirmation link, then sign in.", true);
+    }
+    report(error.message);
+  }
   const nameFromEmail = e => e.split("@")[0].split(/[._-]+/).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
   const initialsOf = n => n.split(/\s+/).map(w => w[0]).slice(0,2).join("").toUpperCase();
 
@@ -170,25 +190,8 @@
     decorate,
     openModal(){ ensureModal(); document.getElementById("hubModal").hidden = false; msg("", true); },
     closeModal(){ const m = document.getElementById("hubModal"); if (m) m.hidden = true; },
-    async submit(){
-      const email = document.getElementById("hubEmail").value.trim().toLowerCase();
-      const pass = document.getElementById("hubPass").value;
-      if (!email.endsWith("@" + TEAM_DOMAIN)) return msg(`Use your @${TEAM_DOMAIN} email address.`);
-      if (!pass) return msg("Enter the team password.");
-      msg("Signing in…", true);
-      const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-      if (!error) { HUB.closeModal(); return; }
-      if (/email not confirmed/i.test(error.message)) return msg("Your email isn't confirmed yet — check your inbox for the confirmation link, then sign in again.");
-      if (/invalid login credentials/i.test(error.message)) {
-        // No confirmed account with these credentials — try to create one.
-        const { data, error: e2 } = await sb.auth.signUp({ email, password: pass, options: { emailRedirectTo: location.origin + location.pathname } });
-        if (e2) return msg(/restricted to @/i.test(e2.message) ? `Signups are restricted to @${TEAM_DOMAIN} addresses.` : e2.message);
-        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0)
-          return msg("An account already exists for this email — check the password, or look for an earlier confirmation email.");
-        return msg("Account created. Check your inbox and click the confirmation link, then sign in.", true);
-      }
-      msg(error.message);
-    },
+    async submit(){ return doSignIn("hubEmail", "hubPass", msg, () => HUB.closeModal()); },
+    async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => {}); },
     async signOut(){ await sb.auth.signOut(); },
     toggleSave(k, el){
       if (!user) { HUB.openModal(); return false; }
@@ -297,6 +300,7 @@
   sb.auth.onAuthStateChange((_evt, session) => {
     user = session ? session.user : null;
     renderAuthBox();
+    showGate(!user);
     // Defer: making Supabase calls inside onAuthStateChange deadlocks the auth lock
     setTimeout(refreshData, 0);
     if (user) { const m = document.getElementById("hubModal"); if (m) m.hidden = true; }
@@ -304,7 +308,9 @@
   sb.auth.getSession().then(({ data }) => {
     user = data.session ? data.session.user : null;
     renderAuthBox();
+    showGate(!user);
     refreshData();
   });
   renderAuthBox();
+  window.HUB.gateSubmit = HUB.gateSubmit; // ensure exposed
 })();
