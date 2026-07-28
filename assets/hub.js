@@ -7,7 +7,12 @@
   const SUPABASE_KEY = "sb_publishable_InMVK8A61MlW0BgEmrFO7w_3NECV1TA";
   const TEAM_DOMAIN = "magestictech.com";
   if (typeof supabase === "undefined") { console.warn("supabase-js not loaded; team features disabled"); return; }
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Disable the Web Locks coordination: on GitHub Pages the UMD build can deadlock
+  // (auth request completes server-side with 200 but the client promise never resolves,
+  // leaving sign-in stuck). A pass-through lock runs the callback immediately and avoids it.
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { lock: async (_name, _acquireTimeout, fn) => await fn() }
+  });
 
   let user = null;
   let saves = new Set();
@@ -191,7 +196,7 @@
     openModal(){ ensureModal(); document.getElementById("hubModal").hidden = false; msg("", true); },
     closeModal(){ const m = document.getElementById("hubModal"); if (m) m.hidden = true; },
     async submit(){ return doSignIn("hubEmail", "hubPass", msg, () => HUB.closeModal()); },
-    async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => {}); },
+    async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => showGate(false)); },
     async signOut(){ await sb.auth.signOut(); },
     toggleSave(k, el){
       if (!user) { HUB.openModal(); return false; }
