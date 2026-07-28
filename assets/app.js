@@ -142,13 +142,85 @@ function renderCoPills(){
 }
 function renderPriority(){
   document.getElementById("prioGrid").innerHTML=COMPANIES.filter(c=>c.p).map(c=>`
-    <div class="card prio-card">
+    <div class="card prio-card" onclick="openBrief('${c.n.replace(/'/g,"\\'")}')" style="cursor:pointer">
       <div class="prio-tag">${c.side==="s"?"Competitor / supplier":"Customer / target market"}</div>
       <h3>${c.n}</h3>
       <div class="meta">${c.hq} · ${c.seg}${c.score!=null?` · <b>AI ${c.score}/10</b>`:""}${c.tier?` · ${c.tier}`:""}</div>
       <p>${c.note||""}</p>
-      <div class="foot"><a href="${newsLink(c.n)}" target="_blank" rel="noopener">Latest AI news ↗</a>${c.src?` · <a href="${c.src}" target="_blank" rel="noopener">Source ↗</a>`:""}</div>
+      <div class="foot"><a href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;"><b>Open account brief →</b></a></div>
     </div>`).join("");
+}
+/* ---------- account briefing (Sales) ---------- */
+function briefPostsFor(name){
+  const clean=name.replace(/\s*\(.*?\)/g,"").trim();
+  const re=new RegExp("\\b"+clean.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split(/\s+/)[0],"i");
+  return POSTS.filter(p=>p.a===name||(p.topic==="Company Watch"&&re.test(p.a))||re.test((p.link?p.link.b:"")+" "+p.body))
+    .sort((x,y)=>y.d.localeCompare(x.d)).slice(0,8);
+}
+function openBrief(name){
+  const c=COMPANIES.find(x=>x.n===name)||{n:name};
+  const posts=briefPostsFor(name);
+  const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+  let old=document.getElementById("briefModal");if(old)old.remove();
+  const div=document.createElement("div");div.id="briefModal";div.className="hub-modal";
+  const newsList=posts.length?posts.map(p=>`
+    <div class="brief-item">
+      <a href="${p.link?p.link.u:"#"}" target="_blank" rel="noopener">${esc((p.link?p.link.b:p.body.split("\n")[0]).slice(0,110))}</a>
+      <span class="comment-when">${esc(p.a)} · ${esc(p.when)}</span>
+    </div>`).join(""):`<div class="comment-hint">No recent AI news captured for ${esc(name)} in the current feed window. The Company Watch pull cycles the full list every few hours.</div>`;
+  const rel=c.side==="s"?"Competitor / supplier":"Customer / target market";
+  const scoreLine=c.score!=null?`AI-leadership score <b>${c.score}/10</b>${c.tier?` · ${esc(c.tier)}`:""}`:"Not yet scored";
+  div.innerHTML=`
+    <div class="hub-modal-card" style="width:min(620px,94vw);max-height:88vh;overflow:auto;text-align:left">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><h3 style="margin-bottom:2px">${esc(c.n)}</h3><div class="comment-when">${esc(c.hq||"")} · ${esc(c.seg||"")}</div></div>
+        <a href="#" class="auth-link" onclick="document.getElementById('briefModal').remove();return false;">✕ Close</a>
+      </div>
+      <div class="brief-score">${rel} · ${scoreLine}</div>
+      ${c.note?`<p style="font-size:13px;color:var(--ink-2);margin:8px 0"><b>AI posture:</b> ${esc(c.note)}</p>`:""}
+      <h4 class="brief-h">Recent AI news</h4>
+      ${newsList}
+      <h4 class="brief-h">Talking points for a customer call</h4>
+      <ul class="brief-points">
+        <li>${c.side==="s"?"Position against their AI program: where does Magestic's nesting/composites depth beat a generalist CAD/CAM AI push?":"Their AI-leadership score is "+(c.score!=null?c.score+"/10 — ":"")+"open with how Magestic's AI roadmap complements where they already are."}</li>
+        <li>Reference the most recent item above — showing you track their AI moves builds credibility fast.</li>
+        <li>Tie back to Magestic's Responsible AI posture (US-origin tooling, human-reviewed, ITAR-aware) — a differentiator for defense-adjacent accounts.</li>
+      </ul>
+      <div class="hub-modal-actions">
+        <a class="auth-btn" style="text-decoration:none" href="${newsLink(c.n)}" target="_blank" rel="noopener">Live news search ↗</a>
+        ${c.src?`<a href="${c.src}" target="_blank" rel="noopener" class="auth-link">AI source ↗</a>`:""}
+      </div>
+    </div>`;
+  div.addEventListener("click",e=>{if(e.target===div)div.remove();});
+  document.body.appendChild(div);
+}
+/* ---------- weekly leadership brief ---------- */
+function openWeeklyBrief(){
+  const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+  const cut=new Date();cut.setUTCDate(cut.getUTCDate()-7);const cutS=cut.toISOString().slice(0,10);
+  const week=POSTS.filter(p=>p.d>=cutS&&p.topic!=="internal")
+    .sort((x,y)=>(y.w||0)-(x.w||0)||y.d.localeCompare(x.d));
+  const seen=new Set(),top=[];
+  for(const p of week){const k=(p.a+p.topic).toLowerCase();if(top.length<6&&!seen.has(k)){seen.add(k);top.push(p);}}
+  const soWhat=p=>p.topic==="Company Watch"?"A tracked account/competitor is moving on AI — sales and account teams should note it.":
+    p.topic==="Regulatory"?"Compliance-relevant: bears on how Magestic and its customers can deploy AI.":
+    p.topic==="Tools"?"Developer-tooling shift — affects how the engineering team builds with AI.":
+    "Frontier/industry movement worth leadership awareness.";
+  let old=document.getElementById("wbModal");if(old)old.remove();
+  const div=document.createElement("div");div.id="wbModal";div.className="hub-modal";
+  div.innerHTML=`<div class="hub-modal-card" style="width:min(640px,94vw);max-height:88vh;overflow:auto;text-align:left">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h3 style="margin-bottom:2px">This week in AI — leadership brief</h3><div class="comment-when">Auto-generated from the week's highest-weighted posts. Review before forwarding.</div></div>
+      <a href="#" class="auth-link" onclick="document.getElementById('wbModal').remove();return false;">✕ Close</a>
+    </div>
+    <ol class="brief-points" style="margin-top:12px">
+      ${top.map(p=>`<li style="margin-bottom:10px"><a href="${p.link?p.link.u:"#"}" target="_blank" rel="noopener"><b>${esc((p.link?p.link.b:p.body.split("\n")[0]).slice(0,120))}</b></a><br><span style="font-size:12px;color:var(--ink-3)">${esc(p.a)} · ${esc(p.when)}</span><br><span style="font-size:12.5px;color:var(--ink-2)">So what: ${soWhat(p)}</span></li>`).join("")}
+    </ol>
+    ${top.length===0?`<div class="comment-hint">Not enough posts in the last 7 days yet — check back after a few refresh cycles.</div>`:""}
+    <div class="comment-hint">Tip: copy these bullets straight into a leadership email or meeting doc.</div>
+  </div>`;
+  div.addEventListener("click",e=>{if(e.target===div)div.remove();});
+  document.body.appendChild(div);
 }
 function renderCompanies(){
   const q=(document.getElementById("coSearch").value||"").trim().toLowerCase();
@@ -160,10 +232,10 @@ function renderCompanies(){
   items=[...items].sort((x,y)=>(y.score??-1)-(x.score??-1));
   document.getElementById("coCount").textContent=`${items.length} of ${COMPANIES.length} companies`;
   document.getElementById("coGrid").innerHTML=items.length?items.map(c=>`
-    <div class="card co-row">
+    <div class="card co-row" onclick="openBrief('${c.n.replace(/'/g,"\\'")}')" style="cursor:pointer">
       <span class="side-dot ${c.side==="s"?"supply":"demand"}" title="${c.side==="s"?"Supplier/competitor":"Customer/market"}"></span>
       <div class="who"><b>${c.n}</b><span>${c.hq} · ${c.seg}${c.score!=null?` · AI ${c.score}/10 ${c.tier}`:""}</span></div>
-      <a class="go" href="${newsLink(c.n)}" target="_blank" rel="noopener">News ↗</a>
+      <a class="go" href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;">Brief →</a>
     </div>`).join("")
     :`<div class="card empty" style="grid-column:1/-1">No companies match this filter.</div>`;
 }
