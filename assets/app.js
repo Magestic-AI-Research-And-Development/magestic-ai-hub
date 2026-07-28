@@ -303,49 +303,63 @@ function renderDirectory(){
 function showView(v){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
   document.getElementById("view-feed").classList.toggle("hidden",v!=="feed");
-  ["industry","learning","tools","experts"].forEach(p=>
+  ["industry","learning","tools","experts","policy"].forEach(p=>
     document.getElementById("view-"+p).classList.toggle("visible",v===p));
   window.scrollTo({top:0});
 }
 
 /* ---------- benchmark & cost charts (Tools page) ---------- */
+// Four lab tracks, best score per lab over time. Each point: [date, score, label, dx, dy, anchor]
 const SWE_SERIES=[
- {n:"Claude",c:"#1264a3",closed:true,pts:[["2024-06",49,"Claude 3.5 Sonnet"],["2025-02",62.3,"Claude 3.7 Sonnet"],["2025-05",72.5,"Claude Opus 4"],["2025-11",80.9,"Claude Opus 4.5"],["2026-07",80.3,"Claude Fable 5 · SWE-bench Pro"]]},
- {n:"GPT",c:"#5f3dc4",closed:true,pts:[["2024-05",33,"GPT-4o"],["2024-12",48.9,"OpenAI o1"],["2025-08",74.9,"GPT-5"]]},
- {n:"Gemini",c:"#0891b2",closed:true,pts:[["2025-03",63.8,"Gemini 2.5 Pro"],["2025-11",76.2,"Gemini 3 Pro"]]},
- {n:"Grok",c:"#c2255c",closed:true,pts:[["2025-07",72.8,"Grok 4"]]},
- {n:"DeepSeek",c:"#e8590c",closed:false,pts:[["2024-12",42,"DeepSeek V3"],["2025-01",49,"DeepSeek R1"],["2025-09",67,"DeepSeek V3.2"],["2026-07",79,"DeepSeek V4 Flash"]]},
- {n:"Kimi",c:"#2f9e44",closed:false,pts:[["2025-07",65.8,"Kimi K2"],["2025-11",71.3,"Kimi K2 Thinking"]]},
- {n:"Qwen",c:"#9c5f1d",closed:false,pts:[["2025-07",69.6,"Qwen3-Coder"]]},
- {n:"gpt-oss",c:"#b02e8c",closed:false,pts:[["2025-08",62.4,"gpt-oss-120b"]]},
- {n:"Inkling",c:"#4f9e0f",closed:false,pts:[["2026-07",77.6,"Thinking Machines Inkling"]]}
+ {n:"Anthropic (Claude)",c:"#16233f",pts:[
+   ["2024-06",49,"3.5 Sonnet",0,20,"middle"],["2025-02",62,"3.7 Sonnet",-8,-8,"end"],
+   ["2025-06",81,"Opus 4.5",-6,-11,"end"],["2025-11",87.5,"Opus 4.7",-8,-8,"end"],
+   ["2026-03",88.5,"Opus 4.8",10,4,"start"],["2026-07",95,"Fable 5",9,4,"start"]]},
+ {n:"OpenAI",c:"#3f7d44",pts:[
+   ["2025-01",49,"o1",8,4,"start"],["2025-04",69,"o3",-8,-6,"end"],
+   ["2025-08",75,"GPT-5",6,15,"start"],["2026-01",80.5,"GPT-5.2",-8,-8,"end"],
+   ["2026-07",80.5,"GPT-5.5",9,4,"start"]]},
+ {n:"Google",c:"#4a90d9",pts:[
+   ["2025-03",63.8,"Gemini 2.5 Pro",6,15,"start"],["2025-11",76,"Gemini 3 Pro",6,15,"start"],
+   ["2026-05",80.5,"Gemini 3.1 Pro",0,-11,"middle"]]},
+ {n:"Open weight frontier",c:"#c96a2b",pts:[
+   ["2024-12",42,"DeepSeek V3",0,18,"middle"],["2025-02",49,"DeepSeek R1",6,15,"start"],
+   ["2025-07",69.5,"Qwen3-Coder",0,18,"middle"],["2026-02",77.5,"DeepSeek V4 Pro",6,15,"start"],
+   ["2026-07",82.5,"Ornith-1.0",9,4,"start"]]}
 ];
 function buildSweSvg(){
-  const W=780,H=360,L=44,R=112,T=16,B=42;
+  const W=820,H=560,L=64,R=150,T=24,B=46;
   const mIdx=d=>{const[y,m]=d.split("-").map(Number);return (y-2024)*12+(m-5);}; // May 2024 = 0
-  const xMax=mIdx("2026-07"),yMin=25,yMax=88;
+  const xMax=mIdx("2026-07"),yMin=30,yMax=100;
   const X=d=>L+(W-L-R)*(mIdx(d)/xMax), Y=v=>T+(H-T-B)*(1-(v-yMin)/(yMax-yMin));
   let out=[];
-  for(let v=30;v<=80;v+=10){out.push(`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" class="sw-grid"/><text x="${L-8}" y="${Y(v)+4}" class="sw-lab" text-anchor="end">${v}</text>`);}
-  [["2024-06","Jun '24"],["2025-01","Jan '25"],["2025-07","Jul '25"],["2026-01","Jan '26"],["2026-07","Jul '26"]]
-    .forEach(([d,l])=>out.push(`<text x="${X(d)}" y="${H-B+18}" class="sw-lab" text-anchor="middle">${l}</text>`));
+  for(let v=30;v<=100;v+=10){out.push(`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" class="sw-grid"/><text x="${L-10}" y="${Y(v)+4}" class="sw-lab" text-anchor="end">${v}</text>`);}
+  // 95% reference line (dotted)
+  out.push(`<line x1="${L}" y1="${Y(95)}" x2="${W-R}" y2="${Y(95)}" style="stroke:#9aa4b2;stroke-width:1;stroke-dasharray:2 3"/>`);
+  // y-axis title
+  out.push(`<text transform="translate(${16},${T+(H-T-B)/2}) rotate(-90)" class="sw-lab" text-anchor="middle" style="font-size:12px">% of 500 real GitHub issues resolved</text>`);
+  [["2024-06","mid-2024"],["2025-01","2025"],["2025-07","mid-2025"],["2026-01","2026"],["2026-07","mid-2026"]]
+    .forEach(([d,l])=>out.push(`<text x="${X(d)}" y="${H-B+20}" class="sw-lab" text-anchor="middle">${l}</text>`));
   out.push(`<line x1="${L}" y1="${Y(yMin)}" x2="${W-R}" y2="${Y(yMin)}" class="sw-axis"/>`);
-  // series lines + dots
+  // series: solid line, dots, per-point labels
   for(const sr of SWE_SERIES){
     if(sr.pts.length>1){
       const d=sr.pts.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" ");
-      out.push(`<path d="${d}" class="sw-line" style="stroke:${sr.c}"${sr.closed?"":" stroke-dasharray=\'6 4\'"}/>`);
+      out.push(`<path d="${d}" class="sw-line" style="stroke:${sr.c};stroke-width:2.2;fill:none"/>`);
     }
-    for(const p of sr.pts)out.push(`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.2" class="sw-dot" style="fill:${sr.c}"><title>${p[2]} — ${p[1]}% (${p[0]})</title></circle>`);
+    for(const p of sr.pts){
+      out.push(`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4" class="sw-dot" style="fill:${sr.c}"><title>${p[2]} — ${p[1]}% (${p[0]})</title></circle>`);
+      out.push(`<text x="${X(p[0])+(p[3]||0)}" y="${Y(p[1])+(p[4]||0)}" text-anchor="${p[5]||"start"}" style="font-size:11px;fill:#555">${p[2]}</text>`);
+    }
   }
-  // headline annotation: Fable 5 is the top published score, on the harder Pro edition
-  out.push(`<text x="${X("2026-07")-8}" y="${Y(80.3)-24}" class="sw-plab" style="fill:#1264a3" text-anchor="end">Fable 5 · 80.3</text>`);
-  out.push(`<text x="${X("2026-07")-8}" y="${Y(80.3)-11}" class="sw-lab" text-anchor="end">(harder SWE-bench Pro)</text>`);
-  // right-edge direct labels with collision nudging
-  const labels=SWE_SERIES.map(sr=>{const last=sr.pts[sr.pts.length-1];return {n:sr.n,c:sr.c,y:Y(last[1])};}).sort((a,b)=>a.y-b.y);
-  for(let i=1;i<labels.length;i++)if(labels[i].y-labels[i-1].y<14)labels[i].y=labels[i-1].y+14;
-  for(const lb of labels)out.push(`<text x="${W-R+10}" y="${lb.y+4}" class="sw-plab" style="fill:${lb.c}">${lb.n}</text>`);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="SWE-bench coding scores over time by model family; solid lines are closed-weight, dashed are open-weight" style="width:100%;height:auto">${out.join("")}</svg>`;
+  // legend (bottom-right, inside plot)
+  const lx=W-R-186,ly=H-B-92;
+  SWE_SERIES.forEach((sr,i)=>{
+    const yy=ly+i*20;
+    out.push(`<line x1="${lx}" y1="${yy}" x2="${lx+26}" y2="${yy}" style="stroke:${sr.c};stroke-width:3"/>`);
+    out.push(`<text x="${lx+34}" y="${yy+4}" style="font-size:12px;fill:var(--ink)">${sr.n}</text>`);
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="SWE-bench Verified coding scores over time, grouped into four lab tracks: Anthropic, OpenAI, Google, and open weight frontier" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
  ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["Claude Opus 4.8",25,true],

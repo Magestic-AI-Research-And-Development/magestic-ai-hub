@@ -385,3 +385,29 @@
 .gate-card input{width:100%;box-sizing:border-box;margin:6px 0;padding:11px 13px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);color:var(--ink)}
 .gate-card input:focus{border-color:var(--accent);outline:none}
 .gate-foot{font-size:11.5px;color:var(--ink-3);margin-top:14px}
+
+/* ===== Policy page ===== */
+.policy-status-banner{display:flex;align-items:center;gap:8px;margin-top:14px;padding:11px 15px;border:1px solid var(--border);border-left:4px solid #d99a1c;border-radius:var(--radius,10px);background:rgba(217,154,28,.08);font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.policy-status-banner b{color:var(--ink)}
+.ps-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.ps-amber{background:#d99a1c;box-shadow:0 0 0 3px rgba(217,154,28,.2)}
+.policy-doc{display:flex;flex-direction:column;gap:16px;margin-top:20px}
+.pol-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius,12px);padding:20px 22px}
+.pol-card h2{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 12px}
+.pol-card p{font-size:14px;line-height:1.6;color:var(--ink-2);margin:0 0 10px}
+.pol-card p:last-child{margin-bottom:0}
+.pol-card ul,.pol-card ol{margin:0;padding-left:20px}
+.pol-card li{font-size:14px;line-height:1.6;color:var(--ink-2);margin-bottom:9px}
+.pol-card li:last-child{margin-bottom:0}
+.pol-card b{color:var(--ink);font-weight:650}
+.pol-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.pol-table th{text-align:left;padding:9px 12px;color:var(--ink-3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.pol-table td{padding:11px 12px;color:var(--ink-2);line-height:1.45;border-bottom:1px solid var(--border);vertical-align:middle}
+.pol-table tr:last-child td{border-bottom:none}
+.pol-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.pol-pill.ok{background:rgba(34,150,83,.14);color:#1f9d55}
+.pol-pill.gate{background:rgba(217,154,28,.16);color:#c98a12}
+.pol-pill.no{background:rgba(214,69,69,.14);color:#d64545}
+.pol-commit li{margin-bottom:10px}
+.pol-owner{margin-top:14px !important;padding-top:14px;border-top:1px solid var(--border);font-size:13px !important;color:var(--ink-3) !important}
+.pol-owner b{color:var(--ink-2)}
