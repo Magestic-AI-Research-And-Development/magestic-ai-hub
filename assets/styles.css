@@ -411,3 +411,20 @@
 .pol-commit li{margin-bottom:10px}
 .pol-owner{margin-top:14px !important;padding-top:14px;border-top:1px solid var(--border);font-size:13px !important;color:var(--ink-3) !important}
 .pol-owner b{color:var(--ink-2)}
+.policy-status-banner.ps-ratified{border-left-color:#1f9d55;background:rgba(34,150,83,.08)}
+.ps-green{background:#1f9d55;box-shadow:0 0 0 3px rgba(34,150,83,.2)}
+.policy-dl{display:inline-flex;align-items:center;margin-top:12px;padding:9px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:13.5px;font-weight:600;text-decoration:none;transition:background .15s}
+.policy-dl:hover{background:var(--accent);color:#fff}
+.policy-dl:hover svg{color:#fff}
+.policy-pdf-wrap{margin-top:18px}
+.policy-pdf{width:100%;height:82vh;min-height:640px;border:1px solid var(--border);border-radius:var(--radius,12px);background:var(--card)}
+.policy-pdf-fallback{font-size:12.5px;color:var(--ink-3);margin-top:8px}
+.policy-pdf-fallback a{color:var(--accent)}
+/* keep the wider MT AI Policy tab from crowding the brand */
+.tab{white-space:nowrap}
+@media (max-width:1240px){
+  .hub-center .hub-sub{display:none}
+}
+@media (max-width:1080px){
+  .tab{padding:6px 9px;font-size:11px}
+}
