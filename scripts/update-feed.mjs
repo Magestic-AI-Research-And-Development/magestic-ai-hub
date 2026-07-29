@@ -203,6 +203,13 @@ const FEEDS = [
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCRaz_dquopKtb4ptswKcxTA", a: "Mistral AI (video)", who: "Official Mistral channel · Codestral/Devstral", av: "auto", t: "official", tags: ["Developers"], topic: "Tools", vid: true, max: 1 },
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCT-nPlVzJI-ccQXlxjSvJmw", a: "AWS Developers (video)", who: "Official AWS dev channel · Q/Kiro", av: "auto", t: "official", tags: ["Developers"], topic: "Tools", vid: true, kw: true, max: 1 },
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCGp4UBwpTNegd_4nCpuBcow", a: "JetBrains (video)", who: "Official JetBrains channel · Junie/AI Assistant", av: "auto", t: "official", tags: ["Developers"], topic: "Tools", vid: true, kw: true, max: 1 },
+  /* AI Workflow Playbooks — the heaviest-weighted lanes on the hub: how practitioners actually
+     use these tools day to day (Anthropic/OpenAI engineer workflow breakdowns, agentic-coding
+     techniques, prompting/context-engineering guides). Simple queries — Bing drops complex ORs. */
+  { w: 10, url: "https://www.bing.com/news/search?q=%22Claude%20Code%22%20workflow&format=rss", a: "AI Workflow Playbooks", who: "How practitioners actually work with AI — workflows, playbooks, techniques", av: "anthropic", t: "official", tags: ["Developers", "Everyone"], topic: "Tools", max: 3 },
+  { w: 10, url: "https://www.bing.com/news/search?q=%22agentic%20coding%22&format=rss", a: "AI Workflow Playbooks", who: "How practitioners actually work with AI — workflows, playbooks, techniques", av: "anthropic", t: "official", tags: ["Developers", "Everyone"], topic: "Tools", max: 3 },
+  { w: 10, url: "https://www.bing.com/news/search?q=%22prompt%20engineering%22&format=rss", a: "AI Workflow Playbooks", who: "How practitioners actually work with AI — workflows, playbooks, techniques", av: "anthropic", t: "official", tags: ["Developers", "Everyone"], topic: "Tools", max: 2 },
+  { w: 10, url: "https://www.bing.com/news/search?q=%22context%20engineering%22&format=rss", a: "AI Workflow Playbooks", who: "How practitioners actually work with AI — workflows, playbooks, techniques", av: "anthropic", t: "official", tags: ["Developers", "Everyone"], topic: "Tools", max: 2 },
   /* AI dev-tool news lane (Bing News; direct links + thumbnails) */
   { url: "https://www.bing.com/news/search?q=%22Claude%20Code%22&format=rss", a: "Claude Code News", who: "News about Claude Code", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 3, w: 5 },
   { url: "https://www.bing.com/news/search?q=%22OpenAI%20Codex%22&format=rss", a: "Codex News", who: "News about OpenAI Codex", av: "openai", t: "official", tags: ["Developers"], topic: "Tools", max: 3, w: 5 },
@@ -260,6 +267,11 @@ const WATCHLIST = new Function(companiesSrcEarly + ";return COMPANIES;")();
 const COMPANY_RE = new RegExp("\\b(" + WATCHLIST.map(c => c.n.replace(/\s*\(.*?\)/g, "").trim()).filter(n => n.length > 3)
   .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")\\b", "i");
 const WAR_NOISE = /\b(combat|weapon|missile|warhead|munition|battlefield|kamikaze|drone strike|air defen[cs]e|counter-?UAS|warfare|lethal)\b/i;
+/* Practitioner-workflow archetype — the single heaviest boost in the feed. Matches "how engineers
+   actually use these tools" content: workflow breakdowns, playbooks, prompting/context engineering,
+   agentic-coding techniques (e.g. an Anthropic engineer explaining how to build a system that
+   prompts itself). This is the content the hub exists to surface, so it outranks announcements. */
+const WORKFLOW_RE = /\b(workflows?|playbooks?|best practices|how (i|we|to) (use|build|code|work|ship)|prompt engineering|context engineering|prompting (guide|tips|claude|gpt)|agentic (coding|engineering|workflows?)|claude code|codex cli|subagents?|sub-agents?|multi-?agent|mcp servers?|skills? for claude|tips for (using|working with)|prompts itself|engineering with (ai|claude|llms)|coding with (ai|claude|llms)|pair.?programming with)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const FIN_NOISE = /\b(stocks?|shares?|share price|earnings|dividend|NYSE|NASDAQ|price target|analyst rating|analysts? (?:say|rate|expect)|market cap|sell-?off|hedge fund|portfolio|52-week|strong buy|strong sell|buy rating|hold rating|undervalued|overvalued|bargain|too cheap|bullish|bearish|rall(?:y|ies)|upgraded?|downgraded?|top \d+ (?:AI )?stocks?|trading|traders?|IPO|ticker)\b|seeking ?alpha|motley ?fool|zacks|benzinga|marketbeat|barchart|insider ?monkey|investing\.com|investor.s business daily|simplywall|thestreet|barron|yahoo finance|24.7 ?wall ?st|cramer|\(NASDAQ|\(NYSE|\(ENXT|stock analysis|wall street|cash burn|investor (?:faith|confidence|concerns?|worr)|valuation/i;
 const CORE_KW = /\b(nest(?:ing|s)?|punch(?:ing|es)?|nibbling|bin[- ]?packing|packing optimi|composite|prepreg|ply|layup|lay-up|draping|kitting|AFP|ATL|fiber placement|tape laying|honeycomb|sheet ?metal|TruLaser|TruTops|laser projection|laser cutting|laser templat|LPT|waterjet|plasma cutting|press brake|turret|CAM\b|CAD\b|toolpath|NC program|post[- ]?processor|material (?:yield|utilization)|cutting path|fabricat)\b/i;
@@ -285,7 +297,9 @@ for (const f of FEEDS) {
         + ((f.topic === "Tools" && (f.vid || (f.tags || []).includes("Developers"))) ? 2 : 0) + (f.vid ? 1 : 0)
         + (f.topic === "Industry AI" ? 1 : 0)
         /* any story naming a watchlist company (customer, partner, or competitor) ranks higher */
-        + (COMPANY_RE.test(it.title) ? 3 : 0);
+        + (COMPANY_RE.test(it.title) ? 3 : 0)
+        /* practitioner workflow/playbook content is the heaviest-weighted archetype on the hub */
+        + (WORKFLOW_RE.test(it.title) ? 5 : (WORKFLOW_RE.test(it.desc || "") ? 2 : 0));
       posts.push({
         a: f.a, s: f.who || `via ${new URL(f.url).hostname}`, av: f.av, t: f.t,
         ...(wt ? { w: wt } : {}),
