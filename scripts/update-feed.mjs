@@ -318,9 +318,14 @@ for (const f of FEEDS) {
 }
 
 
-/* ---- Company Watch: hourly Google News pull for every company in data/companies.js ----
-   Priority companies (p:1) are fetched every run; the rest rotate in slices of 30 per hour,
-   so the full 265-company watchlist cycles roughly every 8 hours. */
+/* ---- Company Watch: Google News pull for every company in data/companies.js ----
+   The 38 priority companies (p:1) are fetched on every run. The other 267 rotate in slices
+   of 70, and the slice index is keyed on the UTC hour: ceil(267/70) = 4 slices, so it is
+   (UTC hour % 4). The workflow's ten daily 2.5-hour slots fall on UTC hours
+   0,2,5,7,10,12,15,17,20,22 -> slices 0,2,1,3,2,0,3,1,0,2, so all four slices are still hit
+   every day and the full 305-company watchlist cycles daily.
+   Note: the slice tracks the clock, not a run counter, so changing the refresh cadence
+   changes how often each slice is revisited but never leaves a slice unvisited. */
 const COMPANIES = WATCHLIST;
 const coQ = (c) => { const co = typeof c === "string" ? { n: c } : c; return co.q || ('"' + co.n.replace(/\s*\(.*?\)/g, "") + '" AI (manufacturing OR production OR factory OR engineering OR software)'); };
 const gnUrl = (c) => `https://news.google.com/rss/search?q=${encodeURIComponent(coQ(c))}&hl=en-US&gl=US&ceid=US:en`;

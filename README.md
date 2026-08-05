@@ -26,7 +26,7 @@ data/directory.js             featured experts + full vendor-neutral directory
 data/companies.js             Industry Watch: 265 companies w/ AI-leadership scores (from the AI Landscape workbook)
 assets/hub.js                 team accounts, saved posts, and comments (Supabase-backed)
 scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feeds
-.github/workflows/update-feed.yml   hourly feed refresh (GitHub Actions)
+.github/workflows/update-feed.yml   feed refresh every 2.5 hours (GitHub Actions)
 .github/workflows/pages.yml         GitHub Pages deploy on every push
 ```
 
@@ -35,9 +35,19 @@ scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feed
 1. Create a repo (e.g. `magestic-ai-hub`) and push this folder to `main`.
 2. In the repo: Settings → Pages → Source → **GitHub Actions**.
 3. Push (or run the "Deploy to GitHub Pages" workflow manually). The site goes live at the Pages URL.
-4. The "Refresh live feed" workflow then runs every 15 minutes on its own: it pulls 100+ public RSS feeds plus per-company Google News (priority companies every run; the rest rotating so all 265 cycle roughly every 8 hours), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
+4. The "Refresh live feed" workflow then runs every 2.5 hours on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 267 rotating in slices of 70 so all 305 cycle daily), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
 
-Note on cadence: GitHub Actions minutes are unlimited on public repos; on a private repo, 15-minute refreshes may exceed the free 2,000 min/month, so either make the repo public or change the cron in .github/workflows/update-feed.yml back to hourly ('0 * * * *').
+Note on cadence: GitHub Actions is the single source of truth for refresh cadence. Cron has no
+2.5-hour step, so `update-feed.yml` lists the ten daily UTC slots across two `cron:` entries
+(00:00, 02:30, 05:00, 07:30, 10:00, 12:30, 15:00, 17:30, 20:00, 22:30). To change the cadence,
+edit those two lines and nothing else.
+
+An earlier setup also had a Supabase `pg_cron` job dispatching this workflow every 15 minutes,
+which meant two schedulers fought over the real cadence and the cron in this file was only a
+fallback. That job has been retired — if the feed ever refreshes faster than the schedule above,
+check for a leftover `cron.job` row in the Supabase project (`select * from cron.job;`) before
+suspecting this file. Note that scheduled GitHub Actions on public repos are queued, not exact,
+and can run several minutes late under load.
 
 To refresh the feed manually at any time: Actions → "Refresh live feed" → Run workflow, or locally `node scripts/update-feed.mjs` (Node 20+).
 
