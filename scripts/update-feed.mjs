@@ -321,9 +321,8 @@ for (const f of FEEDS) {
 /* ---- Company Watch: Google News pull for every company in data/companies.js ----
    The 38 priority companies (p:1) are fetched on every run. The other 267 rotate in slices
    of 70, and the slice index is keyed on the UTC hour: ceil(267/70) = 4 slices, so it is
-   (UTC hour % 4). The workflow's ten daily 2.5-hour slots fall on UTC hours
-   0,2,5,7,10,12,15,17,20,22 -> slices 0,2,1,3,2,0,3,1,0,2, so all four slices are still hit
-   every day and the full 305-company watchlist cycles daily.
+   (UTC hour % 4). With the workflow running every 10 minutes, each hour's runs re-poll one
+   slice ~6x, and the full 305-company watchlist cycles every 4 hours.
    Note: the slice tracks the clock, not a run counter, so changing the refresh cadence
    changes how often each slice is revisited but never leaves a slice unvisited. */
 const COMPANIES = WATCHLIST;

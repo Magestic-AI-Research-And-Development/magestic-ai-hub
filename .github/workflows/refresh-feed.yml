@@ -1,15 +1,14 @@
 name: Refresh live feed
 
 on:
-  # Every 2.5 hours. Cron has no 2.5-hour step (24 is not divisible by 2.5), so the
-  # ten daily slots are listed explicitly across two entries:
-  #   00:00  02:30  05:00  07:30  10:00  12:30  15:00  17:30  20:00  22:30  UTC
-  # Every gap is exactly 2.5h except the 22:30 -> 00:00 wrap, which is 1.5h.
-  # This is the ONLY schedule for the feed: the old Supabase every-15-min dispatch
-  # was retired so there is a single source of truth for cadence.
+  # Every 10 minutes — the practical maximum on GitHub Actions. Scheduled runs
+  # are queued "no earlier than" the cron time, so real-world cadence is
+  # ~10-20 min under load. This is the ONLY schedule for the feed: the old
+  # Supabase every-15-min dispatcher was retired so there is a single source
+  # of truth for cadence. (Fine on a public repo: Actions minutes are free.
+  # If this repo ever goes private, slow this cron down or minutes will burn.)
   schedule:
-    - cron: "0 0,5,10,15,20 * * *"
-    - cron: "30 2,7,12,17,22 * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch: {}    # manual "Run workflow" button
 
 concurrency: {group: feed-refresh, cancel-in-progress: false}

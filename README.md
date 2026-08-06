@@ -26,7 +26,7 @@ data/directory.js             featured experts + full vendor-neutral directory
 data/companies.js             Industry Watch: 265 companies w/ AI-leadership scores (from the AI Landscape workbook)
 assets/hub.js                 team accounts, saved posts, and comments (Supabase-backed)
 scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feeds
-.github/workflows/refresh-feed.yml  feed refresh every 2.5 hours (GitHub Actions)
+.github/workflows/refresh-feed.yml  feed refresh every 10 minutes (GitHub Actions)
 .github/workflows/pages.yml         GitHub Pages deploy on every push
 ```
 
@@ -35,12 +35,14 @@ scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feed
 1. Create a repo (e.g. `magestic-ai-hub`) and push this folder to `main`.
 2. In the repo: Settings → Pages → Source → **GitHub Actions**.
 3. Push (or run the "Deploy to GitHub Pages" workflow manually). The site goes live at the Pages URL.
-4. The "Refresh live feed" workflow then runs every 2.5 hours on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 267 rotating in slices of 70 so all 305 cycle daily), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
+4. The "Refresh live feed" workflow then runs every 10 minutes on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 267 rotating in slices of 70 keyed to the UTC hour, so the full 305-company watchlist cycles every 4 hours), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
 
-Note on cadence: GitHub Actions is the single source of truth for refresh cadence. Cron has no
-2.5-hour step, so `refresh-feed.yml` lists the ten daily UTC slots across two `cron:` entries
-(00:00, 02:30, 05:00, 07:30, 10:00, 12:30, 15:00, 17:30, 20:00, 22:30). To change the cadence,
-edit those two lines and nothing else.
+Note on cadence: GitHub Actions is the single source of truth for refresh cadence — the single
+`cron: "*/10 * * * *"` line in `refresh-feed.yml`. To change the cadence, edit that line and
+nothing else. Every 10 minutes is the practical ceiling: GitHub queues scheduled runs "no
+earlier than" the cron time, so expect ~10-20 minutes between refreshes in practice. This is
+free on a public repo; if the repo ever goes private, slow the cron down or it will burn
+through the free Actions minutes in days.
 
 An earlier setup also had a Supabase `pg_cron` job dispatching this workflow every 15 minutes,
 which meant two schedulers fought over the real cadence and the cron in this file was only a
