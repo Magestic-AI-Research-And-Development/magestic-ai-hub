@@ -2,7 +2,7 @@
 /* Regenerates data/feed-live.js from public RSS/Atom feeds.
    No dependencies — plain Node 20+ (global fetch).
    Run locally:  node scripts/update-feed.mjs
-   Run on GitHub: .github/workflows/update-feed.yml calls this hourly and commits changes. */
+   Run on GitHub: .github/workflows/refresh-feed.yml calls this on a 2.5-hour schedule and commits changes. */
 
 import { writeFileSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";

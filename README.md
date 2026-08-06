@@ -26,7 +26,7 @@ data/directory.js             featured experts + full vendor-neutral directory
 data/companies.js             Industry Watch: 265 companies w/ AI-leadership scores (from the AI Landscape workbook)
 assets/hub.js                 team accounts, saved posts, and comments (Supabase-backed)
 scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feeds
-.github/workflows/update-feed.yml   feed refresh every 2.5 hours (GitHub Actions)
+.github/workflows/refresh-feed.yml  feed refresh every 2.5 hours (GitHub Actions)
 .github/workflows/pages.yml         GitHub Pages deploy on every push
 ```
 
@@ -38,7 +38,7 @@ scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feed
 4. The "Refresh live feed" workflow then runs every 2.5 hours on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 267 rotating in slices of 70 so all 305 cycle daily), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
 
 Note on cadence: GitHub Actions is the single source of truth for refresh cadence. Cron has no
-2.5-hour step, so `update-feed.yml` lists the ten daily UTC slots across two `cron:` entries
+2.5-hour step, so `refresh-feed.yml` lists the ten daily UTC slots across two `cron:` entries
 (00:00, 02:30, 05:00, 07:30, 10:00, 12:30, 15:00, 17:30, 20:00, 22:30). To change the cadence,
 edit those two lines and nothing else.
 
