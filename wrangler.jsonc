@@ -1,0 +1,10 @@
+// Cloudflare Worker config — serves the static site (no build step).
+// Deployed by .github/workflows/deploy-cloudflare.yml on every push to main.
+{
+  "name": "magestic-ai-hub",
+  "compatibility_date": "2026-08-06",
+  "assets": {
+    "directory": ".",
+    "html_handling": "auto-trailing-slash"
+  }
+}
