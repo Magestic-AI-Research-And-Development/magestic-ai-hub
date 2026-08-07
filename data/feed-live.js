@@ -371,7 +371,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "http://www.bing.com/th?id=ONUT.eajf-WjS9ArwVSv0howdmg&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.msn.com/en-us/technology/artificial-intelligence/this-is-how-elon-musk-is-combining-tesla-spacex-and-x-into-one-ai-machine-each-company-contributes-a-different-kind-of-intelligence/vi-AA29B9XE",
@@ -393,7 +393,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "http://www.bing.com/th?id=ONUT.K-toouEihYW9RITyKuL_rQ&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.eweek.com/news/spacex-robots-moon-factories/",
@@ -415,7 +415,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://memeburn.com/wp-content/uploads/2026/08/SpaceX-and-NVIDIA-Are-Building-AI-Data-Centers-in-Space-With-Starmind.jpg",
   "link": {
    "u": "https://memeburn.com/spacex-and-nvidia-are-building-ai-data-centers-in-space/",
@@ -1361,7 +1361,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "http://www.bing.com/th?id=ONUT.PJavniOSdBh-boAE6i5Qtw&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.msn.com/en-us/news/technology/elon-musk-says-spacex-s-ai-could-soon-draw-as-much-electricity-as-new-york-city-in-a-heatwave-what-that-means-for-your-power-bill/ar-AA29BOrd",
@@ -1425,7 +1425,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://media.assettype.com/freepressjournal/2026-08-07/2vhwyda2/Untitled-design-2026-08-07T162408.796.jpg",
   "link": {
    "u": "https://www.freepressjournal.in/tech/elon-musks-spacex-tesla-unveil-168-billion-terafab-ai-chip-factory-in-texas-to-power-next-gen-technology-video",
@@ -1579,7 +1579,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "http://www.bing.com/th?id=ONUT.zJe3A4bsHjAnkJe4RzVhwA&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.msn.com/en-us/technology/artificial-intelligence/elon-musk-s-16-5-billion-ai-chip-bet-just-took-a-major-step-forward-the-first-chips-will-be-built-in-america/vi-AA29Br3T",
@@ -2093,7 +2093,7 @@ const POSTS_LIVE = [
   "s": "CAD/CAM & product development magazine",
   "av": "auto",
   "t": "industry",
-  "w": 6,
+  "w": 8,
   "d": "2026-08-06",
   "when": "Aug 6",
   "body": "Creo gets ‘Triple A’ AI as PTC advances its roadmap\n\nCreo 13 gives glimpses of PTC's plans for its powerhouse CAD product The post Creo gets ‘Triple A’ AI as PTC advances its roadmap appeared first on DEVELOP3D .…",
@@ -2231,7 +2231,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://hermes.media.static.aol.com/media/2026/08/06/f0c1eb44-7ef7-327e-a796-496760059d53/8bd0c542-41c2-4204-a1be-4ecdc1f48434.jpg",
   "link": {
    "u": "https://www.aol.com/articles/spacex-says-terafab-built-texas-142548000.html",
@@ -2253,7 +2253,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://g.foolcdn.com/image/?url=https%3A%2F%2Fcdn.content.foolcdn.com%2Fimages%2F1umn9qeh%2Fproduction%2F09c629e446c100e12ea771356cca22926c6ef3a5-1200x800.png%3Fw%3D800%26q%3D75%26fit%3Dmax%26auto%3Dformat&w=1200&op=resize",
   "link": {
    "u": "https://www.fool.com/investing/2026/08/06/just-announced-spacex-and-nvidia-teaming-up-on-new-orbital-ai-data-center/",
@@ -2275,7 +2275,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://imageio.forbes.com/specials-images/imageserve/6a2c2936398d03835edf6156/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
   "link": {
    "u": "https://www.forbes.com/sites/jonmarkman/2026/08/07/spacex-goes-exclusive-with-nvidia-putting-rubin-gpus-in-orbit/",
@@ -3026,7 +3026,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://americanbazaaronline.com/wp-content/uploads/2025/03/Semiconductor-.webp",
   "link": {
    "u": "https://americanbazaaronline.com/2026/08/06/spacex-tesla-to-spend-16-8-billion-on-terafab-plant-in-texas-485947/",
@@ -3372,7 +3372,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "link": {
    "u": "https://www.yahoo.com/news/videos/spacex-plans-gigasat-factory-manufacture-034237930.html",
    "b": "SpaceX plans 'Gigasat Factory' to manufacture AI satellite data centers in Bastrop County",
@@ -3437,7 +3437,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://im.rediff.com/1200-630/money/2022/may/30musk1.jpg",
   "link": {
    "u": "https://www.rediff.com/news/report/spacex-and-tesla-to-build-168-billion-ai-chip-plant-in-texas/20260807.htm",
@@ -3680,7 +3680,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://bl-i.thgim.com/public/incoming/p762za/article71316351.ece/alternates/LANDSCAPE_1200/2024-08-12T100203Z_246086352_RC2CL7ALZAIJ_RTRMADP_3_USA-ELECTION-TRUMP-MUSK.JPG",
   "link": {
    "u": "https://www.thehindubusinessline.com/info-tech/spacex-to-build-168-billion-chip-plant-in-texas-create-over-3000-jobs/article71316332.ece",
@@ -3790,7 +3790,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "http://www.bing.com/th?id=ONUT.Xp-wGrdYRtxf-nUnyEA1RQ&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.msn.com/en-in/news/other/tsla-spcx-s-16-8b-terafab-nears-construction-as-elon-musk-details-compute-split-25-for-tesla-optimus-and-75-for-ai-spacecraft/ar-AA29yHdQ",
@@ -3875,7 +3875,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://i.insider.com/6a73b04b8fcc2e955f7dd9d8?width=1200&format=jpeg",
   "link": {
    "u": "https://www.businessinsider.com/elon-musk-terafab-ai-texas-backlash-spacex-regulation-2026-8",
@@ -4493,7 +4493,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "link": {
    "u": "https://www.moneycontrol.com/technology/elon-musk-outlines-plan-to-use-robots-for-moon-factories-spacex-eyes-future-space-manufacturing-article-13996544.html",
    "b": "Elon Musk outlines plan to use robots for Moon factories, SpaceX eyes future space manufac",
@@ -4822,7 +4822,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://image.cnbcfm.com/api/v1/image/108345622-1785962525010-gettyimages-1241146807-ELKHORN_BATTERY.jpeg?v=1785970096&w=1920&h=1080",
   "link": {
    "u": "https://www.cnbc.com/2026/08/05/spacex-tesla-megapack-ai-data-centers.html",
@@ -5466,7 +5466,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "link": {
    "u": "https://www.yahoo.com/news/videos/spacex-picks-nvidias-rubin-chips-132358893.html",
    "b": "SpaceX Picks Nvidia's Rubin Chips as the Brain of Its Orbital AI Data Centre",
@@ -5510,7 +5510,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 6,
+  "w": 4,
   "img": "https://imageio.forbes.com/specials-images/imageserve/6a749f6fec074f7fbb097fec/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
   "link": {
    "u": "https://www.forbes.com/sites/johnkoetsier/2026/08/06/defense-startup-ai-turns-2-months-of-engineering-into-20-minutes/",
@@ -6007,7 +6007,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "http://www.bing.com/th?id=ONUT.UjSTpYuJYDN3aR2OMezDBg&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://finance.yahoo.com/technology/ai/articles/nvidia-power-spacex-ai-infrastructure-160300929.html",
@@ -6337,7 +6337,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "link": {
    "u": "https://hothardware.com/news/nvidia-wins-exclusive-spacex-pact-for-space-based-ai-servers",
    "b": "NVIDIA Wins Exclusive SpaceX Pact For Space-Based AI Servers",
@@ -6490,7 +6490,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "http://www.bing.com/th?id=ONUT.xvJ9wXUELFqrHhBWamf-Gg&pid=News&w=1200&h=675&c=7&rs=1&qlt=90",
   "link": {
    "u": "https://www.msn.com/en-us/money/markets/cnbc-daily-open-iran-oman-in-talks-on-hormuz-spacex-is-loyal-to-nvidia-on-ai/ar-AA29tOhm",
@@ -8009,7 +8009,7 @@ const POSTS_LIVE = [
    "Product Managers"
   ],
   "topic": "Company Watch",
-  "w": 5.9,
+  "w": 3.9000000000000004,
   "img": "https://image.cnbcfm.com/api/v1/image/108345082-17859192641785919261-47588538782-1080pnbcnews.jpg?v=1785919263&w=1920&h=1080",
   "link": {
    "u": "https://www.cnbc.com/video/2026/08/05/spacex-moves-towards-becoming-an-ai-cloud-player.html",
@@ -8263,7 +8263,7 @@ const POSTS_LIVE = [
   "s": "Additive manufacturing & 3D printing intelligence",
   "av": "auto",
   "t": "industry",
-  "w": 4,
+  "w": 6,
   "d": "2026-08-04",
   "when": "Aug 4",
   "body": "Backflip AI launches AI copilot for CAD\n\nThe AI copilot for CAD is powered by a new foundation model that can convert 3D scans, STLs, and other mesh files into fully editable, parametric CAD models.…",
@@ -8285,7 +8285,7 @@ const POSTS_LIVE = [
   "s": "CAD/CAM & product development magazine",
   "av": "auto",
   "t": "industry",
-  "w": 6,
+  "w": 8,
   "d": "2026-08-04",
   "when": "Aug 4",
   "body": "Backflip AI&#8217;s updated engine flips mesh into feature tree-CAD model in seconds\n\nCuts the cost of digitising a physical part 'from $1,500 to $10' The post Backflip AI&#8217;s updated engine flips mesh into feature tree-CAD model in seconds appeared first on DEVELOP3D .…",
@@ -8329,7 +8329,7 @@ const POSTS_LIVE = [
   "s": "European toolmaking & mould making",
   "av": "auto",
   "t": "industry",
-  "w": 4,
+  "w": 6,
   "d": "2026-08-04",
   "when": "Aug 4",
   "body": "Metrologic DCS launches major software update across its entire suite\n\nAI-powered assistance, CAD-free part programming and data-driven fixture optimisation are among the key additions in the latest Metrolog V25 and 3DCS software releases from Metrologic DCS.…",
