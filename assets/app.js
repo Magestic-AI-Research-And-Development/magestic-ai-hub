@@ -4,10 +4,13 @@
 const POSTS = [...(typeof POSTS_LIVE !== "undefined" ? POSTS_LIVE : []), ...POSTS_CURATED];
 let activeRole = "Everyone";
 let feedFilter = "All";
+const SECURITY_SRC=/^(AI Security & Threat Watch|The Hacker News|Chinese AI Models · Security & Policy|Chinese Open Models · Risk Watch)$/;
+const SECURITY_RE=/\b(security|breach(?:es|ed)?|hack(?:ed|ing|ers?)?|vulnerab|exploit|malware|ransomware|phishing|cyber(?:attack|security|crime)?|prompt injection|jailbreak|exfiltrat|zero[- ]day|CVE-\d|threat actor|data leak)\b/i;
 const FEED_FILTERS = {
   "All": p=>true,
-  "Marketing": p=>p.tags.includes("Marketing & Sales")||p.topic==="Company Watch",
+  "Security": p=>SECURITY_SRC.test(p.a)||SECURITY_RE.test((p.link?p.link.b+" ":"")+(p.body||"").slice(0,300)),
   "Developers": p=>p.topic==="Tools"||p.tags.includes("Developers"),
+  "Marketing": p=>p.tags.includes("Marketing & Sales")||p.topic==="Company Watch",
   "Regulatory": p=>p.topic==="Regulatory",
   "Saved": p=>!!(window.HUB&&HUB.isSaved(postKey(p)))
 };
