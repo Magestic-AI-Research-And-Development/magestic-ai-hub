@@ -147,7 +147,7 @@ function renderPriority(){
       <h3>${c.n}</h3>
       <div class="meta">${c.hq} · ${c.seg}${c.score!=null?` · <b>AI ${c.score}/10</b>`:""}${c.tier?` · ${c.tier}`:""}</div>
       <p>${c.note||""}</p>
-      <div class="foot"><a href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;"><b>Open account brief →</b></a></div>
+      <div class="foot"><a href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;"><b>More info →</b></a></div>
     </div>`).join("");
 }
 /* ---------- account briefing (Sales) ---------- */
@@ -155,7 +155,7 @@ function briefPostsFor(name){
   const clean=name.replace(/\s*\(.*?\)/g,"").trim();
   const re=new RegExp("\\b"+clean.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").split(/\s+/)[0],"i");
   return POSTS.filter(p=>p.a===name||(p.topic==="Company Watch"&&re.test(p.a))||re.test((p.link?p.link.b:"")+" "+p.body))
-    .sort((x,y)=>y.d.localeCompare(x.d)).slice(0,8);
+    .sort((x,y)=>y.d.localeCompare(x.d)).slice(0,25);
 }
 function openBrief(name){
   const c=COMPANIES.find(x=>x.n===name)||{n:name};
@@ -177,17 +177,15 @@ function openBrief(name){
         <a href="#" class="auth-link" onclick="document.getElementById('briefModal').remove();return false;">✕ Close</a>
       </div>
       <div class="brief-score">${rel} · ${scoreLine}</div>
-      ${c.note?`<p style="font-size:13px;color:var(--ink-2);margin:8px 0"><b>AI posture:</b> ${esc(c.note)}</p>`:""}
-      <h4 class="brief-h">Recent AI news</h4>
+      <h4 class="brief-h">AI posture</h4>
+      ${c.note?`<p style="font-size:13px;color:var(--ink-2);margin:8px 0">${esc(c.note)}</p>`:`<div class="comment-hint">No AI-posture assessment on file yet for ${esc(c.n)}.</div>`}
+      <p style="font-size:12px;color:var(--ink-3);margin:4px 0 8px">${[c.cat?`Category: ${esc(c.cat)}`:"",c.tier?`Tier: ${esc(c.tier)}`:"",c.seg?`Segment: ${esc(c.seg)}`:""].filter(Boolean).join(" · ")}</p>
+      <h4 class="brief-h">AI news — tracked feed items</h4>
       ${newsList}
-      <h4 class="brief-h">Talking points for a customer call</h4>
-      <ul class="brief-points">
-        <li>${c.side==="s"?"Position against their AI program: where does Magestic's nesting/composites depth beat a generalist CAD/CAM AI push?":"Their AI-leadership score is "+(c.score!=null?c.score+"/10 — ":"")+"open with how Magestic's AI roadmap complements where they already are."}</li>
-        <li>Reference the most recent item above — showing you track their AI moves builds credibility fast.</li>
-        <li>Tie back to Magestic's Responsible AI posture (US-origin tooling, human-reviewed, ITAR-aware) — a differentiator for defense-adjacent accounts.</li>
-      </ul>
+      <p style="font-size:11.5px;color:var(--ink-3);margin:6px 0 2px">The tracked feed covers roughly the past two weeks per company. For the full two-year history use the archive links below.</p>
       <div class="hub-modal-actions">
         <a class="auth-btn" style="text-decoration:none" href="${newsLink(c.n)}" target="_blank" rel="noopener">Live news search ↗</a>
+        <a class="auth-btn" style="text-decoration:none" href="https://www.google.com/search?q=${encodeURIComponent('"'+c.n.replace(/\s*\(.*?\)/g,"")+'" AI')}&tbm=nws" target="_blank" rel="noopener">News archive (2yr+) ↗</a>
         ${c.src?`<a href="${c.src}" target="_blank" rel="noopener" class="auth-link">AI source ↗</a>`:""}
       </div>
     </div>`;
