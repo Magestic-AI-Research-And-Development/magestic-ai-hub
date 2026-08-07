@@ -445,7 +445,9 @@ const merged = mergedDedup.filter(p => !p._drop).slice(0, 400);
    Bing th endpoint honors w/qlt params; YouTube maxresdefault is 1280x720 (frontend falls back if missing) */
 const upImg = (u) => {
   if (!u) return u;
-  if (/bing\.com\/th\?/.test(u)) return u.replace(/&(w|h|qlt|c)=\d+/g, "") + "&w=1200&qlt=90";
+  // c=7 (smart crop) + fixed 16:9 box makes Bing crop-fill server-side instead of
+  // serving letterboxed thumbs with white bars baked into the JPEG.
+  if (/bing\.com\/th\?/.test(u)) return u.replace(/&(w|h|qlt|c|rs)=\d+/g, "") + "&w=1200&h=675&c=7&rs=1&qlt=90";
   if (/ytimg\.com\/vi\//.test(u)) return u.replace(/\/(hqdefault|mqdefault|sddefault|default)\.jpg/, "/maxresdefault.jpg");
   return u;
 };
