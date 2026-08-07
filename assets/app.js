@@ -362,6 +362,30 @@ function buildSweSvg(){
   });
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="SWE-bench Verified coding scores over time, grouped into four lab tracks: Anthropic, OpenAI, Google, and open weight frontier" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
+/* Snapshot leaderboards for the two headline reasoning benchmarks.
+   [model, score %, closedWeight]. Only models with published scores. */
+const HLE_BARS=[
+ ["Claude Fable 5",53.3,true],["Claude Opus 5",52.6,true],["Grok 4",50.7,true],
+ ["GPT-5.6 Sol",47.2,true],["Gemini 3.1 Pro",46.4,true],["Kimi K2.5 (open)",31.5,false]
+];
+const ARC2_BARS=[
+ ["GPT-5.6 Sol",92.5,true],["Claude Opus 5",90.4,true],["GPT-5.5",85,true],
+ ["Gemini 3.1 Deep Think",85,true],["GPT-5.4 Pro",83,true],
+ ["Gemini 3.1 Pro",77.1,true],["Claude Opus 4.6",69,true]
+];
+function buildPctBarsSvg(data){
+  const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+data.length*rowH;
+  const max=100,X=v=>L+(W-L-R)*(v/max);
+  let out=[];
+  for(const g of [20,40,60,80,100])out.push(`<line x1="${X(g)}" y1="${T}" x2="${X(g)}" y2="${H-B}" class="sw-grid"/><text x="${X(g)}" y="${H-B+16}" class="sw-lab" text-anchor="middle">${g}%</text>`);
+  data.forEach(([n,v,closed],i)=>{
+    const y=T+i*rowH;
+    out.push(`<text x="${L-8}" y="${y+rowH/2+4}" class="sw-lab" text-anchor="end">${n}</text>`);
+    out.push(`<rect x="${L}" y="${y+4}" width="${Math.max(X(v)-L,2)}" height="${rowH-9}" rx="4" class="cost-bar ${closed?"sw-closed":"sw-open"}"><title>${n} — ${v}%</title></rect>`);
+    out.push(`<text x="${X(v)+6}" y="${y+rowH/2+4}" class="sw-plab">${v}%</text>`);
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Benchmark scores by model" style="width:100%;height:auto">${out.join("")}</svg>`;
+}
 const COST_BARS=[
  ["Claude Fable 5",50,true],["Claude Mythos 5",50,true],["GPT-5.6 Sol",30,true],
  ["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],
@@ -408,6 +432,8 @@ function buildMetrSvg(){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="METR 50 percent time horizon: how long an autonomous task frontier models can complete, log scale, doubling roughly every 4 to 7 months" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 function renderSweChart(){
+  const he=document.getElementById("hleChart");if(he)he.innerHTML=buildPctBarsSvg(HLE_BARS);
+  const ae=document.getElementById("arcChart");if(ae)ae.innerHTML=buildPctBarsSvg(ARC2_BARS);
   const el=document.getElementById("sweChart");if(el)el.innerHTML=buildSweSvg();
   const ce=document.getElementById("costChart");if(ce)ce.innerHTML=buildCostSvg();
   const me=document.getElementById("metrChart");if(me)me.innerHTML=buildMetrSvg();
