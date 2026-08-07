@@ -57,7 +57,7 @@
     const email = (document.getElementById(emailId).value || "").trim().toLowerCase();
     const pass = document.getElementById(passId).value;
     if (!email.endsWith("@" + TEAM_DOMAIN)) return report(`Use your @${TEAM_DOMAIN} email address.`);
-    if (!pass) return report("Enter the team password.");
+    if (!pass) return report("Enter your password.");
     report("Signing in…", true);
     const H = { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY };
     let res, data;
@@ -133,9 +133,8 @@
     div.innerHTML = `
       <div class="hub-modal-card">
         <h3>Magestic team sign in</h3>
-        <p class="hub-modal-sub">Use your @${TEAM_DOMAIN} email and the team password. First time here? The same form creates your account and signs you straight in.</p>
         <input id="hubEmail" type="email" placeholder="you@${TEAM_DOMAIN}" autocomplete="email">
-        <input id="hubPass" type="password" placeholder="Team password" autocomplete="current-password">
+        <input id="hubPass" type="password" placeholder="Password" autocomplete="current-password">
         <div id="hubMsg" class="hub-msg"></div>
         <div class="hub-modal-actions">
           <button class="auth-btn" onclick="HUB.submit()">Sign in / create account</button>
