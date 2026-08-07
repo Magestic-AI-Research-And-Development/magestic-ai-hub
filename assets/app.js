@@ -122,7 +122,7 @@ function renderFeed(){
         <div class="avatar" style="background:${avFor(p).bg}">${avFor(p).txt}</div>
         <div class="post-who">
           <div class="name">${p.a}${badge(p.t)}</div>
-          <div class="sub">${p.s}</div>
+          ${p.s?`<div class="sub">${p.s}</div>`:""}
           <div class="when">${p.when} · 2026</div>
         </div>
       </div>
