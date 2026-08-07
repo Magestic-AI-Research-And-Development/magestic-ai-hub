@@ -39,6 +39,9 @@
     } catch (e) { console.warn("could not persist session:", e); }
   }
 
+  // Gate logo: reuse the header's embedded Magestic logo image
+  try { const hl = document.querySelector(".logo-img"), gl = document.getElementById("gateLogo"); if (hl && gl) gl.src = hl.src; } catch (e) {}
+
   let user = null;
   let saves = new Set();
   let counts = {};           // post_key -> comment count
