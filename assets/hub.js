@@ -138,6 +138,7 @@
         <div id="hubMsg" class="hub-msg"></div>
         <div class="hub-modal-actions">
           <button class="auth-btn" onclick="HUB.submit()">Sign in / create account</button>
+          <button class="auth-btn" style="background:#2f2f2f" onclick="HUB.msSignIn()">Sign in with Microsoft</button>
           <a href="#" class="auth-link" onclick="HUB.closeModal();return false;">Cancel</a>
         </div>
       </div>`;
@@ -263,6 +264,19 @@
     async submit(){ return doSignIn("hubEmail", "hubPass", msg, () => HUB.closeModal()); },
     async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => showGate(false)); },
     async signOut(){ await sb.auth.signOut(); },
+    async msSignIn(){
+      // Entra ID (Azure) SSO via Supabase. On a company machine Edge is already
+      // signed into Microsoft at the OS level, so this round-trip is silent.
+      const say = (t) => { const g = document.getElementById("gateMsg"); const m = document.getElementById("hubMsg");
+        const el = (g && !document.getElementById("authGate")?.hidden) ? g : (m || g); if (el) { el.textContent = t; el.className = "hub-msg err"; } };
+      try {
+        const { error } = await sb.auth.signInWithOAuth({
+          provider: "azure",
+          options: { scopes: "email openid profile", redirectTo: location.origin + location.pathname }
+        });
+        if (error) say("Microsoft sign-in isn't set up yet — use your email and password.");
+      } catch (e) { say("Microsoft sign-in failed — use your email and password."); }
+    },
     toggleSave(k, el){
       if (!user) { HUB.openModal(); return false; }
       const on = saves.has(k);
