@@ -363,11 +363,12 @@ function buildSweSvg(){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="SWE-bench Verified coding scores over time, grouped into four lab tracks: Anthropic, OpenAI, Google, and open weight frontier" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
- ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],
- ["Gemini 3.1 Pro",15,true],["GPT-5.6 Terra",15,true],["Claude Sonnet 5",10,true],
+ ["Claude Fable 5",50,true],["Claude Mythos 5",50,true],["GPT-5.6 Sol",30,true],
+ ["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],
+ ["Gemini 3.1 Pro",12,true],["GPT-5.6 Terra",12,true],["Claude Sonnet 5",10,true],
  ["Gemini 3.5 Flash",9,true],["Qwen3.7 Max (hosted)",7.5,false],["Grok 4.5",6,true],
- ["GPT-5.6 Luna",6,true],["Inkling (hosted)",4.68,false],["Muse Spark 1.1",4.25,true],
- ["Kimi K2 (hosted)",3,false],["DeepSeek V4 (hosted)",1.7,false]
+ ["Inkling (hosted)",4.68,false],["Muse Spark 1.1",4.25,true],
+ ["Kimi K2 (hosted)",3,false],["DeepSeek V4 (hosted)",1.7,false],["GPT-5.6 Luna",1.2,true]
 ];
 function buildCostSvg(){
   const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+COST_BARS.length*rowH;
@@ -382,7 +383,7 @@ function buildCostSvg(){
   });
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Price per million output tokens by model" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
-const METR_PTS=[["2023-03",4,"GPT-4"],["2024-05",8,"GPT-4o"],["2024-10",40,"Claude 3.5 Sonnet"],["2025-03",75,"o3 / Claude 3.7"],["2025-06",137,"GPT-5"],["2025-07",289,"Claude Opus 4.5"],["2026-02",870,"Claude Opus 4.6"]];
+const METR_PTS=[["2023-03",4,"GPT-4"],["2024-05",8,"GPT-4o"],["2024-10",40,"Claude 3.5 Sonnet"],["2025-03",75,"o3 / Claude 3.7"],["2025-06",137,"GPT-5"],["2025-07",289,"Claude Opus 4.5"],["2026-02",719,"Claude Opus 4.6"],["2026-05",1045,"Claude Mythos Preview"]];
 function buildMetrSvg(){
   const W=780,H=330,L=56,R=30,T=16,B=42;
   const mIdx=d=>{const[y,m]=d.split("-").map(Number);return (y-2023)*12+(m-3);}; // Mar 2023 = 0
@@ -396,13 +397,13 @@ function buildMetrSvg(){
     .forEach(([d,l])=>out.push(`<text x="${X(d)}" y="${H-B+18}" class="sw-lab" text-anchor="middle">${l}</text>`));
   // dashed doubling-trend extension from the last measured point (~doubling every 4-5 months recently)
   const last=METR_PTS[METR_PTS.length-1];
-  const trendEnd=870*Math.pow(2,(mIdx("2026-12")-mIdx("2026-02"))/4.5);
+  const trendEnd=last[1]*Math.pow(2,(mIdx("2026-12")-mIdx(last[0]))/4.5);
   out.push(`<path d="M${X(last[0])},${Y(last[1])} L${X("2026-12")},${Y(trendEnd)}" class="sw-line" style="stroke:var(--chart-open)" stroke-dasharray="5 5" opacity="0.7"/>`);
   out.push(`<text x="${X("2026-12")-6}" y="${Y(trendEnd)+16}" class="sw-lab" text-anchor="end">trend if doubling continues</text>`);
   const line=METR_PTS.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" ");
   out.push(`<path d="${line}" class="sw-line" style="stroke:var(--chart-closed)"/>`);
   for(const p of METR_PTS)out.push(`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" class="sw-dot" style="fill:var(--chart-closed)"><title>${p[2]} — ${p[1]>=60?(p[1]/60).toFixed(1)+" hours":p[1]+" min"} (${p[0]})</title></circle>`);
-  const plabs=[["2023-03",4,"GPT-4",-10,"start"],["2024-05",8,"GPT-4o",-10,"middle"],["2024-10",40,"Claude 3.5",-10,"middle"],["2025-03",75,"o3 / 3.7",22,"middle"],["2025-06",137,"GPT-5",22,"middle"],["2025-07",289,"Opus 4.5",-12,"middle"],["2026-02",870,"Opus 4.6 · 14.5 hr",-12,"middle"]];
+  const plabs=[["2023-03",4,"GPT-4",-10,"start"],["2024-05",8,"GPT-4o",-10,"middle"],["2024-10",40,"Claude 3.5",-10,"middle"],["2025-03",75,"o3 / 3.7",22,"middle"],["2025-06",137,"GPT-5",22,"middle"],["2025-07",289,"Opus 4.5",-12,"middle"],["2026-02",719,"Opus 4.6 · 12.0 hr",16,"middle"],["2026-05",1045,"Mythos Preview",-10,"start"]];
   for(const[d,v,t,dy,a] of plabs)out.push(`<text x="${X(d)}" y="${Y(v)+dy}" class="sw-plab" text-anchor="${a}">${t}</text>`);
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="METR 50 percent time horizon: how long an autonomous task frontier models can complete, log scale, doubling roughly every 4 to 7 months" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
