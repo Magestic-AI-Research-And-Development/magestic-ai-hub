@@ -55,7 +55,13 @@ function badge(t){
 }
 function matchesRole(tags){return activeRole==="Everyone"||tags.includes(activeRole)||tags.includes("Everyone");}
 function liSearch(name){return `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;}
-function newsLink(name){return `https://news.google.com/search?q=${encodeURIComponent('"'+name.replace(/\s*\(.*?\)/g,"")+'" AI')}`;}
+/* Mirror of the feed pipeline's per-company query: use the curated q when the
+   company has one (disambiguation), else quoted name + industry terms. */
+function coQuery(c){
+  if(typeof c==="string")c=(typeof COMPANIES!=="undefined"?COMPANIES.find(x=>x.n===c):null)||{n:c};
+  return c.q||('"'+c.n.replace(/\s*\(.*?\)/g,"")+'" AI (manufacturing OR production OR factory OR engineering OR software)');
+}
+function newsLink(name){return `https://news.google.com/search?q=${encodeURIComponent(coQuery(name))}`;}
 
 /* ---------- roles ---------- */
 
@@ -185,7 +191,7 @@ function openBrief(name){
       <p style="font-size:11.5px;color:var(--ink-3);margin:6px 0 2px">The tracked feed covers roughly the past two weeks per company. For the full two-year history use the archive links below.</p>
       <div class="hub-modal-actions">
         <a class="auth-btn" style="text-decoration:none" href="${newsLink(c.n)}" target="_blank" rel="noopener">Live news search ↗</a>
-        <a class="auth-btn" style="text-decoration:none" href="https://www.google.com/search?q=${encodeURIComponent('"'+c.n.replace(/\s*\(.*?\)/g,"")+'" AI')}&tbm=nws" target="_blank" rel="noopener">News archive (2yr+) ↗</a>
+        <a class="auth-btn" style="text-decoration:none" href="https://www.google.com/search?q=${encodeURIComponent(coQuery(c))}&tbm=nws" target="_blank" rel="noopener">News archive (2yr+) ↗</a>
         ${c.src?`<a href="${c.src}" target="_blank" rel="noopener" class="auth-link">AI source ↗</a>`:""}
       </div>
     </div>`;
