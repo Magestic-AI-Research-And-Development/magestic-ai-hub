@@ -331,13 +331,31 @@ function renderDirectory(){
     return roles.includes(activeRole)||roles.includes("Everyone");
   });
   if(q)items=items.filter(d=>(d.n+" "+d.r+" "+d.c).toLowerCase().includes(q));
-  document.getElementById("dirCount").textContent=`${items.length} of ${DIRECTORY.length} voices, all equal`;
-  document.getElementById("dirGrid").innerHTML=items.length?items.map(d=>`
-    <div class="card dir-row">
-      <div class="avatar-sm" style="background:${hashColor(d.n)}">${initials(d.n)}</div>
-      <div class="who"><b>${d.n}</b><span>${d.r}</span></div>
-      <a class="go" href="${d.u||liSearch(d.n)}" target="_blank" rel="noopener">${d.u?"Visit ↗":"Find ↗"}</a>
-    </div>`).join("")
+  // CTO-relevance ordering: curated featured voices first (their pr rank), then by
+  // category value to Magestic's technical leadership, preserving list order within.
+  const CAT_PR={"Industrial & Manufacturing":1,"Engineering & Education":2,"Research & Academia":3,"Data Engineering":4,"Safety & Critical Perspectives":5,"Adoption & Strategy":6,"Media & Newsletters":7};
+  const featured=(typeof EXPERTS!=="undefined"?EXPERTS:[]).filter(e=>
+    (dirFilter==="All"||e.c===dirFilter)&&
+    (!q||(e.n+" "+e.r+" "+(e.c||"")).toLowerCase().includes(q))&&
+    (activeRole==="Everyone"||(e.tags||[]).includes(activeRole)||(e.tags||[]).includes("Everyone")))
+    .sort((a,b)=>(a.pr||99)-(b.pr||99));
+  const featNames=new Set(featured.map(e=>e.n));
+  items=items.filter(d=>!featNames.has(d.n)).sort((a,b)=>(CAT_PR[a.c]||9)-(CAT_PR[b.c]||9));
+  document.getElementById("dirCount").textContent=`${featured.length+items.length} of ${EXPERTS.length+DIRECTORY.length} voices · ordered by relevance to Magestic`;
+  const avatarHTML=d=>d.img
+    ?`<img src="${d.img}" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none" onerror="this.outerHTML='<div class=\\'avatar-sm\\' style=\\'background:${hashColor(d.n)}\\'>${initials(d.n)}</div>'">`
+    :`<div class="avatar-sm" style="background:${hashColor(d.n)}">${initials(d.n)}</div>`;
+  const block=d=>`
+    <div class="card prio-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">${avatarHTML(d)}
+        <div><h3 style="margin:0">${d.n}</h3><div class="comment-when">${d.r||""}</div></div>
+      </div>
+      <div class="tags" style="margin-bottom:8px"><span class="tag topic">${d.c||"Voice"}</span>${(d.tags||[]).filter(t=>t!=="Everyone").map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+      ${d.why?`<p>${d.why}</p>`:""}
+      <div class="foot">${d.links?d.links.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t} ↗</a>`).join(" · "):`<a href="${d.u||liSearch(d.n)}" target="_blank" rel="noopener">${d.u?"Visit ↗":"Find on LinkedIn ↗"}</a>`}</div>
+    </div>`;
+  document.getElementById("dirGrid").innerHTML=(featured.length+items.length)
+    ?[...featured,...items].map(block).join("")
     :`<div class="card empty" style="grid-column:1/-1">No people match this filter.</div>`;
 }
 
