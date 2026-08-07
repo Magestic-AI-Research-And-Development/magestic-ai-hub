@@ -2,28 +2,6 @@
    Generated: 2026-08-07T17:59:31.547Z · 400 items (rolling archive) from 197 feeds. */
 const POSTS_LIVE = [
  {
-  "a": "Ed Zitron",
-  "s": "via www.wheresyoured.at",
-  "av": "auto",
-  "t": "voice",
-  "w": 1,
-  "d": "2026-08-07",
-  "when": "Aug 7",
-  "body": "Premium: The Hater's Guide To NVIDIA (Part 2)\n\nFor a little under a year, everyone &#x2014; myself included &#x2014; has compared NVIDIA to Enron, largely because NVIDIA insisted, in detail, that it was nothing like Enron, WorldCom, or Lucent , a potent example of the Streisand Effect that would be much fu…",
-  "tags": [
-   "Marketing & Sales",
-   "Product Managers"
-  ],
-  "topic": "Industry AI",
-  "link": {
-   "u": "https://www.wheresyoured.at/premium-the-haters-guide-to-nvidia-part-2/",
-   "b": "Premium: The Hater's Guide To NVIDIA (Part 2)",
-   "s": "www.wheresyoured.at"
-  },
-  "img": "https://storage.ghost.io/c/24/d8/24d8fcec-dfba-4f40-a467-823d2941ae46/content/images/2024/01/wyea--1.jpeg",
-  "ts": "2026-08-07T17:59:31.547Z"
- },
- {
   "a": "IIoT World",
   "s": "Industrial IoT & AI publication",
   "av": "auto",
