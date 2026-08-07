@@ -277,7 +277,7 @@ function renderCompanies(){
 /* ---------- learning ---------- */
 let learnFilter="All";
 function renderLearnPills(){
-  const cats=["All","Developers","Database Engineers","Leadership","Marketing"];
+  const cats=["All","Security","Developers","Database Engineers","Product Engineers","Marketing","Regulatory"];
   document.getElementById("learnPills").innerHTML=cats.map(c=>
     `<button class="pill ${c===learnFilter?'active':''}" onclick="learnFilter='${c}';renderLearnPills();renderLearning();">${c}</button>`).join("");
 }
