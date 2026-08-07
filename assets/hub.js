@@ -1,10 +1,11 @@
 /* Magestic AI Hub — team accounts, saved posts, comments.
-   Backed by Supabase (project: magestic-ai-hub). Sign-up is restricted to
-   @magestictech.com addresses at the database level; new accounts must confirm
-   their email before they can sign in. */
+   Backed by Supabase (project: Magestic AI Dashboard / yfzeiekuqgruubanksoo).
+   Sign-up is restricted to @magestictech.com addresses at the database level.
+   Email confirmation is disabled in the project's Auth settings: the first
+   sign-in creates the account and enters the site immediately. */
 (function(){
-  const SUPABASE_URL = "https://hrcjcyqocyjrrxevdkyx.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_InMVK8A61MlW0BgEmrFO7w_3NECV1TA";
+  const SUPABASE_URL = "https://yfzeiekuqgruubanksoo.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_FH8NK4e7DE4k60tKMGl2RA_GRXZu9tV";
   const TEAM_DOMAIN = "magestictech.com";
   if (typeof supabase === "undefined") {
     // The Supabase CDN script didn't load (network/firewall). Rather than silently break the
@@ -76,8 +77,19 @@
       } catch (e) { return report("Network error — try again."); }
       if (!su.ok) return report(/restricted to @|domain/i.test(sud.msg || sud.error_description || "") ? `Signups are restricted to @${TEAM_DOMAIN} addresses.` : (sud.msg || sud.error_description || "Sign-up failed — check the password."));
       if (sud.user && Array.isArray(sud.user.identities) && sud.user.identities.length === 0)
-        return report("An account already exists — check the password, or look for an earlier confirmation email.");
-      return report("Account created. Check your inbox for the confirmation link, then sign in.", true);
+        return report("An account already exists with this email — check the password.");
+      if (sud.access_token) {
+        // Confirmation is disabled: the signup response includes a session, so enter directly.
+        user = sud.user;
+        const g2 = document.getElementById("authGate"); if (g2) g2.remove();
+        document.body.style.overflow = "";
+        try { renderAuthBox(); } catch (e) {}
+        try { onOk(); } catch (e) {}
+        try { await sb.auth.setSession({ access_token: sud.access_token, refresh_token: sud.refresh_token }); } catch (e) {}
+        setTimeout(refreshData, 0);
+        return;
+      }
+      return report("Account created — sign in with the same email and password.", true);
     }
     report(emsg || "Sign-in failed — try again.");
   }
@@ -105,7 +117,7 @@
     div.innerHTML = `
       <div class="hub-modal-card">
         <h3>Magestic team sign in</h3>
-        <p class="hub-modal-sub">Use your @${TEAM_DOMAIN} email and the team password. First time here? The same form creates your account and sends a confirmation email.</p>
+        <p class="hub-modal-sub">Use your @${TEAM_DOMAIN} email and the team password. First time here? The same form creates your account and signs you straight in.</p>
         <input id="hubEmail" type="email" placeholder="you@${TEAM_DOMAIN}" autocomplete="email">
         <input id="hubPass" type="password" placeholder="Team password" autocomplete="current-password">
         <div id="hubMsg" class="hub-msg"></div>
