@@ -303,7 +303,7 @@ function renderDirectory(){
 function showView(v){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
   document.getElementById("view-feed").classList.toggle("hidden",v!=="feed");
-  ["industry","learning","tools","experts"].forEach(p=>
+  ["industry","learning","tools","experts","metrics"].forEach(p=>
     document.getElementById("view-"+p).classList.toggle("visible",v===p));
   window.scrollTo({top:0});
 }

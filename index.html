@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <title>Magestic AI Hub · Research &amp; Learning Platform</title>
-<link rel="stylesheet" href="assets/styles.css?v=29">
+<link rel="stylesheet" href="assets/styles.css?v=30">
 </head>
 <body>
 <div id="authGate">
@@ -35,6 +35,8 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3m-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3m0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5m8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5"/></svg>Experts</button>
       <button class="tab" data-view="industry" onclick="showView('industry')">
         <svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7zM6 19H4v-2h2zm0-4H4v-2h2zm0-4H4V9h2zm0-4H4V5h2zm4 12H8v-2h2zm0-4H8v-2h2zm0-4H8V9h2zm0-4H8V5h2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8zm-2-8h-2v2h2zm0 4h-2v2h2z"/></svg>Industry</button>
+      <button class="tab" data-view="metrics" onclick="showView('metrics')">
+        <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>AI Metrics</button>
     </nav>
     <div class="live-pill"><span class="live-dot"></span><span id="lastUpdated">Updated Jul 17, 2026</span></div>
     <button id="themeBtn" class="theme-btn" onclick="toggleTheme()" title="Switch light / dark mode">☾</button>
@@ -248,22 +250,30 @@
   <div class="page-head">
     <h1>AI Tooling</h1>
     <p>AI Tooling To Research.</p>
+  </div>
+  <div class="grid-2" id="toolsGrid"></div>
+</div>
+
+<!-- ================= AI METRICS VIEW ================= -->
+<div class="page" id="view-metrics">
+  <div class="page-head">
+    <h1>AI Metrics</h1>
+    <p>How frontier AI capability, cost, and autonomy are trending. Updated weekly.</p>
     <div class="card" style="margin:14px 0 18px;padding:16px 18px">
       <h3 style="margin-bottom:2px">Coding capability over time — SWE-bench Verified</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:10px">Best score per lab over time, grouped into four tracks. Hover any point for the exact model and score.</p>
       <div id="sweChart"></div>
-      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Source: SWE-bench Verified leaderboards (% of 500 real GitHub issues resolved), July 2026. Chart shows the best score per lab over time; figures drift monthly.</p>
+      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Source: SWE-bench Verified leaderboards (% of 500 real GitHub issues resolved), August 2026. Chart shows the best score per lab over time; figures drift monthly.</p>
       <h3 style="margin-bottom:2px">What they cost — price per 1M output tokens</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:10px"><span class="sw-key sw-closed-t">&#9632; Closed-weight API</span>&nbsp;&nbsp;<span class="sw-key sw-open-t">&#9632; Open-weight (hosted)</span></p>
       <div id="costChart"></div>
-      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Representative list prices, July 2026; hosted open-weight prices vary by provider. Note the pattern: near-frontier capability now exists at every price point.</p>
+      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Representative list prices, August 2026; hosted open-weight prices vary by provider. Note the pattern: near-frontier capability now exists at every price point.</p>
       <h3 style="margin-bottom:2px">The metric that isn't saturating — METR autonomous task horizon</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:10px">How long a software task frontier models complete autonomously at 50% reliability (log scale). This is the number that determines when an agent can carry a real workflow end-to-end.</p>
       <div id="metrChart"></div>
-      <p style="font-size:11.5px;color:var(--ink-3);margin-top:8px">Source: METR time-horizon evaluations (metr.org). The horizon has doubled roughly every 7 months since 2020, accelerating to ~4–5 months recently; the dashed line extends that trend. Claude Fable 5 has no published METR figure yet.</p>
+      <p style="font-size:11.5px;color:var(--ink-3);margin-top:8px">Source: METR time-horizon evaluations (metr.org). The horizon has doubled roughly every 7 months since 2020, accelerating to ~4–5 months recently; the dashed line extends that trend. No METR figures have been published yet for models newer than Opus 4.6.</p>
     </div>
   </div>
-  <div class="grid-2" id="toolsGrid"></div>
 </div>
 
 <!-- ================= EXPERTS VIEW ================= -->
@@ -290,8 +300,8 @@
 <script src="data/feed-live.js"></script>
 <script src="data/directory.js"></script>
 <script src="data/companies.js"></script>
-<script src="assets/app.js?v=29"></script>
+<script src="assets/app.js?v=30"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';document.head.appendChild(s);"></script>
-<script src="assets/hub.js?v=29"></script>
+<script src="assets/hub.js?v=30"></script>
 </body>
 </html>
