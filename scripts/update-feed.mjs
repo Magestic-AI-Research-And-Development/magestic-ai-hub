@@ -18,7 +18,7 @@ const FEEDS = [
   /* news organizations & industry press (max 3 each) */
   { url: "https://openai.com/news/rss.xml", who: "Official OpenAI newsroom", a: "OpenAI", av: "openai", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
   { w: 5, url: "https://rsshub.bestblogs.dev/anthropic/news", who: "Official Anthropic announcements (community RSS mirror)", a: "Anthropic", av: "anthropic", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
-  { w: 6, url: "https://github.com/anthropics/claude-code/releases.atom", who: "Claude Code releases & changelog", a: "Claude Code Changelog", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 2 },
+  { w: 6, url: "https://github.com/anthropics/claude-code/releases.atom", who: "Claude Code releases & changelog", a: "Claude Code Changelog", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 2, noimg: 1, prefix: "Claude Code release " },
   { url: "https://blog.google/technology/ai/rss/", who: "Official Google AI blog", a: "Google AI", av: "google", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
   { url: "https://github.blog/feed/", who: "Official GitHub blog", a: "GitHub", av: "github", t: "official", tags: ["Developers"], topic: "Tools", max: 3 },
   { w: 4, url: "https://www.compositesworld.com/rss/news", kw: true, who: "The composites manufacturing industry's leading publication", a: "CompositesWorld", av: "industry", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 4 },
@@ -103,7 +103,7 @@ const FEEDS = [
      Chinese-model scrutiny, data sovereignty, AI governance frameworks. w:2 so it ranks with premium trade press. */
   /* Breaking AI security & majors watch (added Jul 23 2026 after the OpenAI/Hugging Face breach was missed):
      high-weight lanes so major security incidents and frontier-lab news reach the top of the feed within a refresh. */
-  { w: 8, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 2 },
+  { skip: /steve harvey|celebrit|kardashian|hollywood|reality tv|talk.?show|game.?show/i, w: 8, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 2 },
   { w: 6, url: "https://www.bing.com/news/search?q=%22Hugging%20Face%22&format=rss", a: "Hugging Face Watch", who: "News about the open-model hub", av: "auto", t: "official", tags: ["Developers", "Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22OpenAI%22&format=rss", a: "OpenAI News Watch", who: "Major OpenAI news across all outlets (Reuters, Bloomberg, CNBC syndicated)", av: "openai", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22Anthropic%22&format=rss", a: "Anthropic News Watch", who: "Major Anthropic news across all outlets", av: "anthropic", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
@@ -250,7 +250,7 @@ function items(xml) {
     const title = strip(g(/<title[^>]*>([\s\S]*?)<\/title>/));
     let link = g(/<link[^>]*href="([^"]+)"[^>]*\/?>/) || strip(g(/<link[^>]*>([\s\S]*?)<\/link>/));
     const date = g(/<pubDate>([\s\S]*?)<\/pubDate>/) || g(/<updated>([\s\S]*?)<\/updated>/) || g(/<published>([\s\S]*?)<\/published>/);
-    const rawDesc = g(/<description[^>]*>([\s\S]*?)<\/description>/) || g(/<summary[^>]*>([\s\S]*?)<\/summary>/) || "";
+    const rawDesc = g(/<description[^>]*>([\s\S]*?)<\/description>/) || g(/<summary[^>]*>([\s\S]*?)<\/summary>/) || g(/<content[^>]*>([\s\S]*?)<\/content>/) || "";
     const desc = strip(rawDesc).slice(0, 260);
     const bimg = strip(g(/<News:Image>([\s\S]*?)<\/News:Image>/));
     const img = bimg || g(/<media:thumbnail[^>]*url="([^"]+)"/) || g(/<media:content[^>]*url="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i) ||
@@ -282,6 +282,7 @@ const CLICKBAIT_RE = /\b(you should never|the one (command|trick|prompt|thing|se
 /* manufacturing-AI relevance, broader than the strict CORE_KW terms */
 const MFG_AI_RE = /\b(predictive maintenance|machine vision|quality inspection|digital twin|smart factory|shop floor|factory floor|CNC|additive manufacturing|3D print(?:ing|ed)?|robotic (?:welding|assembly|inspection)|industrial (?:AI|automation|robots?)|PLM|CAD software|CAM software|generative design|manufacturing (?:AI|software|automation))\b/i;
 /* operational/config changes to tools we run — the "admin email" class of news */
+const CELEB_NOISE = /\b(steve harvey|celebrit(?:y|ies)|kardashian|hollywood|reality (?:tv|show)|talk[- ]show|game[- ]show|(?:tv|movie|film|pop) star|influencers?|red carpet)\b/i;
 const OPS_RE = /\b(auto.?mode|permissions? (mode|change|default)|defaults? (are )?(changing|changed)|deprecat(ed|ion|ing)?|breaking change|end[- ]of[- ]life|sunset(ting)?|pricing (change|update)|now requires?|managed settings|changelog|new default)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const FIN_NOISE = /\b(stocks?|shares?|share price|earnings|dividend|NYSE|NASDAQ|price target|analyst rating|analysts? (?:say|rate|expect)|market cap|sell-?off|hedge fund|portfolio|52-week|strong buy|strong sell|buy rating|hold rating|undervalued|overvalued|bargain|too cheap|bullish|bearish|rall(?:y|ies)|upgraded?|downgraded?|top \d+ (?:AI )?stocks?|trading|traders?|IPO|ticker)\b|seeking ?alpha|motley ?fool|zacks|benzinga|marketbeat|barchart|insider ?monkey|investing\.com|investor.s business daily|simplywall|thestreet|barron|yahoo finance|24.7 ?wall ?st|cramer|\(NASDAQ|\(NYSE|\(ENXT|stock analysis|wall street|cash burn|investor (?:faith|confidence|concerns?|worr)|valuation/i;
@@ -298,6 +299,8 @@ for (const f of FEEDS) {
     let feedItems = items(xml);
     if (f.t === "industry" && !f.kw) f.kw = true; // ALL publication-type sources are AI-filtered, any topic
     if (f.skip) feedItems = feedItems.filter(i => !f.skip.test(i.title));
+    if (f.noimg) feedItems.forEach(i => { i.img = ""; });
+    if (f.prefix) feedItems.forEach(i => { if (!i.title.startsWith(f.prefix)) i.title = f.prefix + i.title; });
     if (f.kw) feedItems = feedItems.filter(i => AI_KW.test(f.kw === "title" ? i.title : i.title + " " + i.desc));
     if (f.domain) feedItems = feedItems.filter(i => MFG_KW.test(i.title + " " + i.desc) || COMPANY_RE.test(i.title + " " + i.desc));
     if (f.topic === "Industry AI") feedItems = feedItems.filter(i => !OFFTOPIC.test(i.title + " " + i.desc) || CORE_KW.test(i.title + " " + i.desc));
@@ -489,6 +492,8 @@ merged.forEach(p => {
     if (c && c.bad && new RegExp(c.bad, "i").test((p.body || "") + " " + (p.link ? p.link.u : ""))) p._drop = true;
     p.w = (c && c.p ? 5 : 4) + (c && c.side === "s" ? 1 : 0) + ((c && c.score || 0) / 10) + (CORE_KW.test(p.body || "") ? 2 : 0) - (c && c.noisy && !CORE_KW.test(p.body || "") ? 2 : 0);
   }
+  if (p.a === "AI Security & Threat Watch" && CELEB_NOISE.test((p.body || "").slice(0, 400))) p._drop = true;
+  if (p.a === "Claude Code Changelog" && !/^Claude Code release /.test((p.body || ""))) p._drop = true;
   /* retro-cap the security lane and total weight (boost stacking produced w14-20 outliers) */
   if (p.a === "AI Security & Threat Watch") p.w = Math.min(Math.max(p.w || 0, 8), 8);
   p.w = Math.min(p.w || 0, 10);

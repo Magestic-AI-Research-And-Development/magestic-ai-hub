@@ -446,27 +446,6 @@ const POSTS_LIVE = [
   "ts": "2026-08-07T19:18:33.407Z"
  },
  {
-  "a": "Claude Code Changelog",
-  "s": "Claude Code releases & changelog",
-  "av": "anthropic",
-  "t": "official",
-  "w": 8,
-  "d": "2026-08-07",
-  "when": "Aug 7",
-  "body": "v2.1.224",
-  "tags": [
-   "Developers"
-  ],
-  "topic": "Tools",
-  "img": "https://avatars.githubusercontent.com/u/178951676?s=60&amp;v=4",
-  "link": {
-   "u": "https://github.com/anthropics/claude-code/releases/tag/v2.1.224",
-   "b": "v2.1.224",
-   "s": "github.com"
-  },
-  "ts": "2026-08-07T19:18:33.407Z"
- },
- {
   "a": "Dwarkesh Patel",
   "s": "via www.dwarkesh.com",
   "av": "auto",
@@ -2400,27 +2379,6 @@ const POSTS_LIVE = [
   "ts": "2026-08-07T19:18:33.407Z"
  },
  {
-  "a": "Claude Code Changelog",
-  "s": "Claude Code releases & changelog",
-  "av": "anthropic",
-  "t": "official",
-  "w": 8,
-  "d": "2026-08-06",
-  "when": "Aug 6",
-  "body": "v2.1.223",
-  "tags": [
-   "Developers"
-  ],
-  "topic": "Tools",
-  "img": "https://avatars.githubusercontent.com/u/178951676?s=60&amp;v=4",
-  "link": {
-   "u": "https://github.com/anthropics/claude-code/releases/tag/v2.1.223",
-   "b": "v2.1.223",
-   "s": "github.com"
-  },
-  "ts": "2026-08-07T19:18:33.407Z"
- },
- {
   "a": "GitHub",
   "s": "Official GitHub blog",
   "av": "github",
@@ -4115,29 +4073,6 @@ const POSTS_LIVE = [
    "b": "Dem senator presses OpenAI, Anthropic for answers in AI hacking probe",
    "s": "www.msn.com"
   },
-  "ts": "2026-08-07T17:59:31.547Z"
- },
- {
-  "a": "AI Security & Threat Watch",
-  "s": "AI security incidents, breaches, and threat research",
-  "av": "auto",
-  "t": "official",
-  "w": 8,
-  "d": "2026-08-06",
-  "when": "Aug 6",
-  "body": "Steve Harvey Says AI Can Help Unlock $140 Billion In Government Benefits Americans Lose\n\nSteve Harvey is now chief advocate officer at Turnout, a $400 million AI startup, betting the technology that cloned him into a scam can help unlock $140 billion in benefits.…",
-  "tags": [
-   "Developers",
-   "Product Managers",
-   "Everyone"
-  ],
-  "topic": "Regulatory",
-  "link": {
-   "u": "https://www.forbes.com/sites/victordey/2026/08/06/steve-harvey-says-ai-can-help-unlock-140-billion-in-government-benefits-americans-lose/",
-   "b": "Steve Harvey Says AI Can Help Unlock $140 Billion In Government Benefits Americans Lose",
-   "s": "www.forbes.com"
-  },
-  "img": "https://imageio.forbes.com/specials-images/imageserve/6a74afdce19d3ec09c641269/0x0.jpg?format=jpg&crop=1382,777,x71,y0,safe&height=900&width=1600&fit=bounds",
   "ts": "2026-08-07T17:59:31.547Z"
  },
  {
