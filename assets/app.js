@@ -84,7 +84,7 @@ function renderFeed(){
   // chronological (date desc, then feed-file order, which the generator writes date-desc).
   posts=[...posts].sort((x,y)=>
     sort==="topic"?x.topic.localeCompare(y.topic)||y.d.localeCompare(x.d):
-    sort==="new"?(y.d.localeCompare(x.d)||POSTS.indexOf(x)-POSTS.indexOf(y)):
+    sort==="new"?(y.d.localeCompare(x.d)||String(y.ts||"").localeCompare(String(x.ts||""))||POSTS.indexOf(x)-POSTS.indexOf(y)):
     rankDay(y).localeCompare(rankDay(x))||wOf(y)-wOf(x)||y.d.localeCompare(x.d));
   if(sort!=="topic")posts=spreadAuthors(posts); // never two consecutive posts from the same source
   // single unified feed, newest first; role/pill/search are pure filters
