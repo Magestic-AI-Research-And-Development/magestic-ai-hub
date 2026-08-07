@@ -17,6 +17,8 @@ const MAX_COMPANY_ITEMS = 90;
 const FEEDS = [
   /* news organizations & industry press (max 3 each) */
   { url: "https://openai.com/news/rss.xml", who: "Official OpenAI newsroom", a: "OpenAI", av: "openai", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
+  { w: 5, url: "https://rsshub.bestblogs.dev/anthropic/news", who: "Official Anthropic announcements (community RSS mirror)", a: "Anthropic", av: "anthropic", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
+  { w: 6, url: "https://github.com/anthropics/claude-code/releases.atom", who: "Claude Code releases & changelog", a: "Claude Code Changelog", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 2 },
   { url: "https://blog.google/technology/ai/rss/", who: "Official Google AI blog", a: "Google AI", av: "google", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
   { url: "https://github.blog/feed/", who: "Official GitHub blog", a: "GitHub", av: "github", t: "official", tags: ["Developers"], topic: "Tools", max: 3 },
   { w: 4, url: "https://www.compositesworld.com/rss/news", kw: true, who: "The composites manufacturing industry's leading publication", a: "CompositesWorld", av: "industry", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 4 },
@@ -277,6 +279,8 @@ const WORKFLOW_RE = /\b(workflows?|playbooks?|best practices|how (i|we|to) (use|
 /* Clickbait shapes get demoted, never boosted — listicle bait reads as workflow content
    to the regex above but is exactly what shouldn't lead the team's feed. */
 const CLICKBAIT_RE = /\b(you should never|the one (command|trick|prompt|thing|setting)|one (command|trick|prompt) (that|to|you)|this (one|simple) (trick|command|prompt)|will (blow your|shock|change everything)|nobody (tells|talks about)|the secret (to|behind)|what happens when i|i (added|typed) one)\b/i;
+/* operational/config changes to tools we run — the "admin email" class of news */
+const OPS_RE = /\b(auto.?mode|permissions? (mode|change|default)|defaults? (are )?(changing|changed)|deprecat(ed|ion|ing)?|breaking change|end[- ]of[- ]life|sunset(ting)?|pricing (change|update)|now requires?|managed settings|changelog|new default)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const FIN_NOISE = /\b(stocks?|shares?|share price|earnings|dividend|NYSE|NASDAQ|price target|analyst rating|analysts? (?:say|rate|expect)|market cap|sell-?off|hedge fund|portfolio|52-week|strong buy|strong sell|buy rating|hold rating|undervalued|overvalued|bargain|too cheap|bullish|bearish|rall(?:y|ies)|upgraded?|downgraded?|top \d+ (?:AI )?stocks?|trading|traders?|IPO|ticker)\b|seeking ?alpha|motley ?fool|zacks|benzinga|marketbeat|barchart|insider ?monkey|investing\.com|investor.s business daily|simplywall|thestreet|barron|yahoo finance|24.7 ?wall ?st|cramer|\(NASDAQ|\(NYSE|\(ENXT|stock analysis|wall street|cash burn|investor (?:faith|confidence|concerns?|worr)|valuation/i;
 const CORE_KW = /\b(nest(?:ing|s)?|punch(?:ing|es)?|nibbling|bin[- ]?packing|packing optimi|composite|prepreg|ply|layup|lay-up|draping|kitting|AFP|ATL|fiber placement|tape laying|honeycomb|sheet ?metal|TruLaser|TruTops|laser projection|laser cutting|laser templat|LPT|waterjet|plasma cutting|press brake|turret|CAM\b|CAD\b|toolpath|NC program|post[- ]?processor|material (?:yield|utilization)|cutting path|fabricat)\b/i;
@@ -305,6 +309,9 @@ for (const f of FEEDS) {
         + (COMPANY_RE.test(it.title) ? 3 : 0)
         /* practitioner workflow/playbook content is the heaviest-weighted archetype on the hub */
         + (WORKFLOW_RE.test(it.title) ? 5 : (WORKFLOW_RE.test(it.desc || "") ? 2 : 0))
+        /* operational changes to tools the team runs (permission defaults, deprecations,
+           pricing, breaking changes) are must-see news and outrank ordinary coverage */
+        + ((f.t === "official" && OPS_RE.test(it.title + " " + (it.desc || ""))) ? 4 : 0)
         - (CLICKBAIT_RE.test(it.title) ? 6 : 0);
       posts.push({
         a: f.a, s: f.who || `via ${new URL(f.url).hostname}`, av: f.av, t: f.t,

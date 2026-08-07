@@ -269,13 +269,13 @@
     async submit(){ return doSignIn("hubEmail", "hubPass", msg, () => HUB.closeModal()); },
     async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => showGate(false)); },
     async signOut(){
-      // The gate element is removed from the DOM on sign-in, so a reload is the
-      // only reliable way back to the login screen. Clear storage FIRST, cap the
-      // network sign-out at 1.5s (supabase-js calls can hang on this site — same
-      // reason sign-in uses direct fetch), and reload unconditionally.
+      // Instant sign-out: blank the screen immediately (no intermediate frame),
+      // clear storage, fire the server-side revocation without waiting on it,
+      // and reload straight to the gate.
+      try { document.documentElement.style.visibility = "hidden"; } catch (e) {}
       try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
       try { Object.keys(localStorage).forEach(k => { if (k.startsWith("sb-")) localStorage.removeItem(k); }); } catch (e) {}
-      try { await Promise.race([sb.auth.signOut(), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+      try { sb.auth.signOut().catch(() => {}); } catch (e) {}
       location.reload();
     },
     async msSignIn(){

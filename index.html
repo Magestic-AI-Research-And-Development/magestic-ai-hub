@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <title>Magestic AI Hub · Research &amp; Learning Platform</title>
-<link rel="stylesheet" href="assets/styles.css?v=51">
+<link rel="stylesheet" href="assets/styles.css?v=52">
 <style>html.authed #authGate{display:none !important}</style>
 <script>
 /* Pre-paint auth check: runs in <head>, before any pixel renders. If a stored
@@ -16,14 +16,6 @@ try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||location.hash
 </script>
 </head>
 <body>
-<div id="authGate">
-  <div class="gate-card">
-    <div class="gate-brand"><img id="gateLogo" alt="Magestic Technologies" style="height:54px;width:auto;display:block;margin:0 auto 10px"><span class="hub-title" style="font-family:'Orbitron',sans-serif;font-size:26px;letter-spacing:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">AI RESEARCH HUB</span></div>
-    <div id="gateMsg" class="hub-msg"></div>
-    <button class="auth-btn" style="width:100%;padding:11px;background:#2f2f2f" onclick="HUB.msSignIn()"><svg width="15" height="15" viewBox="0 0 23 23" style="vertical-align:-2px;margin-right:8px"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg>Sign in with Microsoft</button>
-    <div class="gate-foot">Access is limited to Magestic Technologies team members.</div>
-  </div>
-</div>
 
 <header>
   <div class="nav-inner">
@@ -59,6 +51,15 @@ try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||location.hash
 try{var _hl=document.querySelector(".logo-img"),_gl=document.getElementById("gateLogo");if(_hl&&_gl)_gl.src=_hl.src;}catch(e){}
 try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||(location.hash&&location.hash.indexOf("access_token=")!==-1)){var _g=document.getElementById("authGate");if(_g)_g.hidden=true;}}catch(e){}
 </script>
+<div id="authGate">
+  <div class="gate-card">
+    <div class="gate-brand"><img id="gateLogo" alt="Magestic Technologies" style="height:54px;width:auto;display:block;margin:0 auto 10px"><span class="hub-title" style="font-family:'Orbitron',sans-serif;font-size:26px;letter-spacing:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">AI RESEARCH HUB</span></div>
+    <div id="gateMsg" class="hub-msg"></div>
+    <button class="auth-btn" style="width:100%;padding:11px;background:#2f2f2f" onclick="HUB.msSignIn()"><svg width="15" height="15" viewBox="0 0 23 23" style="vertical-align:-2px;margin-right:8px"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg>Sign in with Microsoft</button>
+    <div class="gate-foot">Access is limited to Magestic Technologies team members.</div>
+  </div>
+</div>
+<script>try{var _hl2=document.querySelector(".logo-img"),_gl2=document.getElementById("gateLogo");if(_hl2&&_gl2)_gl2.src=_hl2.src;}catch(e){}</script>
 
 <!-- ================= FEED VIEW ================= -->
 <div class="wrap" id="view-feed">
@@ -319,8 +320,8 @@ try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||(location.has
 <script src="data/feed-live.js"></script>
 <script src="data/directory.js"></script>
 <script src="data/companies.js"></script>
-<script src="assets/app.js?v=51"></script>
+<script src="assets/app.js?v=52"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';document.head.appendChild(s);"></script>
-<script src="assets/hub.js?v=51"></script>
+<script src="assets/hub.js?v=52"></script>
 </body>
 </html>
