@@ -9,7 +9,7 @@ const SECURITY_RE=/\b(security|breach(?:es|ed)?|hack(?:ed|ing|ers?)?|vulnerab|ex
 const FEED_FILTERS = {
   "All": p=>true,
   "Security": p=>SECURITY_SRC.test(p.a)||SECURITY_RE.test((p.link?p.link.b+" ":"")+(p.body||"").slice(0,300)),
-  "Developers": p=>p.topic==="Tools"||p.tags.includes("Developers"),
+  "Technical": p=>p.topic==="Tools"||p.tags.includes("Developers")||p.tags.includes("Database Engineers"),
   "Marketing": p=>p.tags.includes("Marketing & Sales")||p.topic==="Company Watch",
   "Regulatory": p=>p.topic==="Regulatory",
   "Saved": p=>!!(window.HUB&&HUB.isSaved(postKey(p)))
@@ -80,7 +80,7 @@ function renderFeed(){
   if(q)posts=posts.filter(p=>(p.a+" "+p.body+" "+p.topic+" "+p.tags.join(" ")).toLowerCase().includes(q));
   // heavyweight posts (w>=4: company-watch and core-relevance stories) stay in the top bucket ~24h longer;
   // in the Developers feed, how-to and instructional videos get an extra boost so education leads
-  const wOf=p=>(p.w||0)+((feedFilter==="Developers"&&p.vid)?3:0);
+  const wOf=p=>(p.w||0)+((feedFilter==="Technical"&&p.vid)?3:0);
   const today=new Date().toISOString().slice(0,10);
   // only genuine top stories (w>=7) earn the extra day at the top of the ranking
   const rankDay=p=>{if(wOf(p)>=7){const dt=new Date(p.d+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const s=dt.toISOString().slice(0,10);return s>today?today:s;}return p.d;};
