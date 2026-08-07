@@ -452,6 +452,9 @@ const upImg = (u) => {
   return u;
 };
 merged.forEach(p => {
+  /* paywalled teaser posts ("Premium: ..." subscriber-only stubs) are filler — drop
+     them everywhere, including carried archive items */
+  if (/^premium:/i.test((p.body || "").trim()) || /^premium:/i.test((p.link && p.link.b) || "")) p._drop = true;
   if (p.link && /bing\.com\/news\/apiclick/.test(p.link.u)) {
     const bm = p.link.u.match(/[?&]url=([^&]+)/);
     if (bm) { try { p.link.u = decodeURIComponent(bm[1]); p.link.s = new URL(p.link.u).hostname; } catch {} }
