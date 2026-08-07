@@ -24,6 +24,20 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { lock: async (_name, _acquireTimeout, fn) => await fn() }
   });
+  // supabase-js persists sessions under this localStorage key. We also write it
+  // ourselves after a direct-fetch sign-in, because relying on setSession alone
+  // proved fragile (sessions were silently not saved, forcing a login on every
+  // new browser window).
+  const STORAGE_KEY = "sb-" + SUPABASE_URL.replace("https://", "").split(".")[0] + "-auth-token";
+  function persistSession(sessionData){
+    try {
+      if (sessionData && sessionData.access_token && sessionData.refresh_token) {
+        if (!sessionData.expires_at && sessionData.expires_in)
+          sessionData.expires_at = Math.floor(Date.now() / 1000) + sessionData.expires_in;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionData));
+      }
+    } catch (e) { console.warn("could not persist session:", e); }
+  }
 
   let user = null;
   let saves = new Set();
@@ -58,11 +72,12 @@
     if (res.ok && data.access_token) {
       // reveal immediately, bulletproof: hide gate first, then non-critical UI in try/catch
       user = data.user;
+      persistSession(data); // guarantee the session survives browser restarts
       const g = document.getElementById("authGate"); if (g) g.remove();
       document.body.style.overflow = "";
       try { renderAuthBox(); } catch (e) {}
       try { onOk(); } catch (e) {}
-      try { await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token }); } catch (e) {}
+      try { await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token }); } catch (e) { console.warn("setSession failed:", e); }
       setTimeout(refreshData, 0);
       return;
     }
@@ -81,11 +96,12 @@
       if (sud.access_token) {
         // Confirmation is disabled: the signup response includes a session, so enter directly.
         user = sud.user;
+        persistSession(sud); // guarantee the session survives browser restarts
         const g2 = document.getElementById("authGate"); if (g2) g2.remove();
         document.body.style.overflow = "";
         try { renderAuthBox(); } catch (e) {}
         try { onOk(); } catch (e) {}
-        try { await sb.auth.setSession({ access_token: sud.access_token, refresh_token: sud.refresh_token }); } catch (e) {}
+        try { await sb.auth.setSession({ access_token: sud.access_token, refresh_token: sud.refresh_token }); } catch (e) { console.warn("setSession failed:", e); }
         setTimeout(refreshData, 0);
         return;
       }
