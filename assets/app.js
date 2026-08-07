@@ -166,15 +166,11 @@ function renderCoPills(){
   document.getElementById("coPills").innerHTML=cats.map(c=>
     `<button class="pill ${c===coFilter?'active':''}" onclick="coFilter='${c.replace(/'/g,"\\'")}';renderCoPills();renderCompanies();">${c}</button>`).join("");
 }
-function renderPriority(){
-  document.getElementById("prioGrid").innerHTML=COMPANIES.filter(c=>c.p).map(c=>`
-    <div class="card prio-card" onclick="openBrief('${c.n.replace(/'/g,"\\'")}')" style="cursor:pointer">
-      <div class="prio-tag">${c.side==="s"?"Competitor / supplier":"Customer / target market"}</div>
-      <h3>${c.n}</h3>
-      <div class="meta">${c.hq} · ${c.seg}${c.score!=null?` · <b>AI ${c.score}/10</b>`:""}${c.tier?` · ${c.tier}`:""}</div>
-      <p>${c.note||""}</p>
-      <div class="foot"><a href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;"><b>More info →</b></a></div>
-    </div>`).join("");
+/* Company significance rank: business scale (sz 1-3) dominates, then priority flag,
+   AI-leadership score, and key-account status. Majors like Lockheed Martin or
+   Greenheck Fan outrank AI-native startups regardless of the startups' AI scores. */
+function coRank(c){
+  return (c.sz||2)*4+(c.p?2:0)+(c.score||0)+(c.tier==="Key Magestic Account"?4:0);
 }
 /* ---------- account briefing (Sales) ---------- */
 function briefPostsFor(name){
@@ -253,13 +249,15 @@ function renderCompanies(){
   else if(coFilter==="Customers & markets")items=items.filter(c=>c.side==="d");
   else if(coFilter!=="All")items=items.filter(c=>c.cat===coFilter);
   if(q)items=items.filter(c=>(c.n+" "+c.hq+" "+c.seg+" "+c.cat+" "+(c.tier||"")).toLowerCase().includes(q));
-  items=[...items].sort((x,y)=>(y.score??-1)-(x.score??-1));
+  items=[...items].sort((x,y)=>coRank(y)-coRank(x)||(y.score??-1)-(x.score??-1)||x.n.localeCompare(y.n));
   document.getElementById("coCount").textContent=`${items.length} of ${COMPANIES.length} companies`;
   document.getElementById("coGrid").innerHTML=items.length?items.map(c=>`
-    <div class="card co-row" onclick="openBrief('${c.n.replace(/'/g,"\\'")}')" style="cursor:pointer">
-      <span class="side-dot ${c.side==="s"?"supply":"demand"}" title="${c.side==="s"?"Supplier/competitor":"Customer/market"}"></span>
-      <div class="who"><b>${c.n}</b><span>${c.hq} · ${c.seg}${c.score!=null?` · AI ${c.score}/10 ${c.tier}`:""}</span></div>
-      <a class="go" href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;">Brief →</a>
+    <div class="card prio-card" onclick="openBrief('${c.n.replace(/'/g,"\\'")}')" style="cursor:pointer">
+      <div class="prio-tag"><span class="side-dot ${c.side==="s"?"supply":"demand"}"></span> ${c.side==="s"?"Competitor / supplier":"Customer / target market"}</div>
+      <h3>${c.n}</h3>
+      <div class="meta">${c.hq} · ${c.seg}${c.score!=null?` · <b>AI ${c.score}/10</b>`:""}${c.tier?` · ${c.tier}`:""}</div>
+      <p>${c.note||""}</p>
+      <div class="foot"><a href="#" onclick="event.stopPropagation();openBrief('${c.n.replace(/'/g,"\\'")}');return false;"><b>More info →</b></a></div>
     </div>`).join("")
     :`<div class="card empty" style="grid-column:1/-1">No companies match this filter.</div>`;
 }
@@ -480,6 +478,6 @@ function renderStats(){
   set("statCompanies",COMPANIES.length);set("statExperts",DIRECTORY.length);
 }
 initTheme();renderUpdated();renderFeedPills();renderFeed();renderWire();renderExpertRail();
-renderPriority();renderCoPills();renderCompanies();
+renderCoPills();renderCompanies();
 renderLearnPills();renderLearning();renderToolsGrid();renderSweChart();
 renderDirPills();renderDirectory();renderStats();
