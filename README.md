@@ -1,6 +1,6 @@
 # Magestic AI Hub
 
-An internal AI research and education platform for the Magestic Technologies team: a LinkedIn-style feed of AI industry news, an Industry Watch covering 200+ companies in Magestic's market, a role-based Learning Center, a tracked-tools guide, and a directory of 125+ vendor-neutral SMEs and thought leaders.
+An internal AI research and education platform for the Magestic Technologies team: a LinkedIn-style feed of AI industry news, an Industry Watch covering 300 companies in Magestic's market, an AI Metrics page tracking frontier benchmarks, a role-based Learning Center, a tracked-tools guide, and a directory of 125+ vendor-neutral SMEs and thought leaders.
 
 Curated by Matt MacLean, Director of AI.
 
@@ -23,7 +23,7 @@ data/content.js               roles, avatars, learning center, tools, news wire
 data/feed.js                  curated feed posts (hand-written, edit freely)
 data/feed-live.js             AUTO-GENERATED live feed items (do not edit)
 data/directory.js             featured experts + full vendor-neutral directory
-data/companies.js             Industry Watch: 265 companies w/ AI-leadership scores (from the AI Landscape workbook)
+data/companies.js             Industry Watch: 300 companies w/ AI-leadership scores (from the AI Landscape workbook)
 assets/hub.js                 team accounts, saved posts, and comments (Supabase-backed)
 scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feeds
 .github/workflows/refresh-feed.yml  feed refresh every 10 minutes (GitHub Actions)
@@ -35,7 +35,7 @@ scripts/update-feed.mjs       regenerates data/feed-live.js from public RSS feed
 1. Create a repo (e.g. `magestic-ai-hub`) and push this folder to `main`.
 2. In the repo: Settings → Pages → Source → **GitHub Actions**.
 3. Push (or run the "Deploy to GitHub Pages" workflow manually). The site goes live at the Pages URL.
-4. The "Refresh live feed" workflow then runs every 10 minutes on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 267 rotating in slices of 70 keyed to the UTC hour, so the full 305-company watchlist cycles every 4 hours), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
+4. The "Refresh live feed" workflow then runs every 10 minutes on its own: it pulls 100+ public RSS feeds plus per-company Google News (the 38 priority companies every run; the other 262 rotating in slices of 70 keyed to the UTC hour, so the full 300-company watchlist cycles every 4 hours), rewrites `data/feed-live.js`, commits, and that push triggers a redeploy. No human or AI in the loop.
 
 Note on cadence: GitHub Actions is the single source of truth for refresh cadence — the single
 `cron: "*/10 * * * *"` line in `refresh-feed.yml`. To change the cadence, edit that line and
@@ -62,10 +62,10 @@ To refresh the feed manually at any time: Actions → "Refresh live feed" → Ru
 
 ## Team accounts, saves, and comments
 
-Signing in, saving posts, and commenting are backed by a Supabase project (`magestic-ai-hub`). How it works:
+Signing in, saving posts, and commenting are backed by a Supabase project ("Magestic AI Dashboard"). How it works:
 
-- Anyone with a `@magestictech.com` email can create an account from the "Team sign in" button using the shared team password. The domain restriction is enforced in the database (a trigger on `auth.users`), so accounts cannot be created with outside addresses even by calling the API directly.
-- New accounts get a confirmation email and must click the link once before signing in.
+- Sign-in is **Microsoft Entra SSO only** ("Sign in with Microsoft"): any active Magestic Microsoft 365 account gets in with one click; the first click creates the account and Team-list profile automatically. The Entra app registration is single-tenant, and a database trigger on `auth.users` independently rejects non-`@magestictech.com` addresses, so outside accounts cannot get in even by calling the API directly. Offboarding is automatic — a disabled M365 account loses access immediately.
+- The Entra app's client secret expires ~August 2028 and must be rotated in the Supabase Azure provider settings before then, or sign-in stops.
 - Saved posts are private to each user (row-level security); comments are visible to all signed-in team members. Nothing is visible to anonymous visitors.
 - The site only ships Supabase's publishable key, which is safe to expose; all access control happens server-side via row-level security.
 

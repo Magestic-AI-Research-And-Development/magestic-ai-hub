@@ -1,5 +1,5 @@
 /* Industry Watch — regenerated from Magestic_AI_Landscape_Competitors_and_Customers_1.xlsx (Jul 17, 2026).
-   60 competitors + 203 target customers ranked by AI-leadership score, plus 2 key Magestic accounts.
+   300 companies (competitors/suppliers and target customers) ranked by AI-leadership score.
    Fields: n, hq, seg, side s/d, cat (filter group), score (1-10), tier, p=1 priority, note (AI evidence), src.
    scripts/update-feed.mjs pulls hourly Google News per company; priority companies every run, the rest in rotation. */
 const COMPANIES = [
@@ -303,10 +303,5 @@ const COMPANIES = [
 {n:"KUKA",hq:"Augsburg, Germany",seg:"Industrial robots",side:"s",cat:"AI-driven manufacturing optimization",note:"iiQKA OS ecosystem; AI-assisted robot programming for fabrication."},
 {n:"ABB Robotics",hq:"Switzerland",seg:"Industrial robots & automation",side:"s",cat:"AI-driven manufacturing optimization",note:"AI-powered item picking, OmniCore controllers, robotic machining cells."},
 {n:"Rockwell Automation",hq:"Milwaukee, WI, USA",seg:"Industrial automation & software",side:"s",cat:"AI-driven manufacturing optimization",note:"FactoryTalk Analytics & LogixAI, Plex MES; broad manufacturing-AI portfolio."},
-{n:"Bombardier",hq:"Montreal, Canada",seg:"Business-jet OEM",side:"d",cat:"Aerospace, Defense & Space",note:"Business-jet structures heavy in composites; digital-manufacturing initiatives."},
-{n:"Embraer",hq:"Brazil",seg:"Aerospace OEM",side:"d",cat:"Aerospace, Defense & Space",note:"E-Jet/defense/eVTOL (Eve) programs; AI in engineering and production planning."},
-{n:"Gulfstream (General Dynamics)",hq:"Savannah, GA, USA",seg:"Business-jet OEM",side:"d",cat:"Aerospace, Defense & Space",note:"Composite-intensive G-series aircraft; sister division to Electric Boat."},
 {n:"Bell (Textron)",q:"(\"Bell Textron\" OR \"Bell Helicopter\") AI (aerospace OR rotorcraft OR aircraft)",bad:"taco|bell canada|bell labs|bell curve",hq:"Fort Worth, TX, USA",seg:"Rotorcraft & tiltrotor OEM",side:"d",cat:"Aerospace, Defense & Space",note:"V-280 FLRAA program; advanced composites and digital-thread manufacturing."},
-{n:"Joby Aviation",hq:"Santa Cruz, CA, USA",seg:"eVTOL OEM",side:"d",cat:"Aerospace, Defense & Space",note:"High-rate composite airframe production ramp; heavily automated factory."},
-{n:"Archer Aviation",hq:"San Jose, CA, USA",seg:"eVTOL OEM",side:"d",cat:"Aerospace, Defense & Space",note:"Midnight eVTOL composite production with automated layup partners."}
 ];
