@@ -166,11 +166,20 @@ function renderCoPills(){
   document.getElementById("coPills").innerHTML=cats.map(c=>
     `<button class="pill ${c===coFilter?'active':''}" onclick="coFilter='${c.replace(/'/g,"\\'")}';renderCoPills();renderCompanies();">${c}</button>`).join("");
 }
-/* Company significance rank: business scale (sz 1-3) dominates, then priority flag,
-   AI-leadership score, and key-account status. Majors like Lockheed Martin or
-   Greenheck Fan outrank AI-native startups regardless of the startups' AI scores. */
+/* Company significance rank: business scale (sz 1-3) dominates, plus a sector-relevance
+   boost — aerospace/defense and the CAD/CAM/composites software world are Magestic's core
+   market and outrank equally-sized consumer players (Tesla, Mercedes) — then priority flag,
+   AI-leadership score, and key-account status. */
+const SECTOR_BOOST={
+  "CAM software (nesting/composites modules)":5,
+  "Nesting/cutting optimization software":5,
+  "Composites manufacturing software":5,
+  "Laser projection systems":4,
+  "Aerospace, Defense & Space":4,
+  "AI-driven manufacturing optimization":3
+};
 function coRank(c){
-  return (c.sz||2)*4+(c.p?2:0)+(c.score||0)+(c.tier==="Key Magestic Account"?4:0);
+  return (c.sz||2)*4+(SECTOR_BOOST[c.cat]||0)+(c.p?2:0)+(c.score||0)+(c.tier==="Key Magestic Account"?4:0);
 }
 /* ---------- account briefing (Sales) ---------- */
 function briefPostsFor(name){
