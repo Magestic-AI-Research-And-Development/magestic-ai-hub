@@ -26,17 +26,18 @@ function initTheme(){
   if(!t)t=(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";
   setTheme(t);
 }
-function spreadAuthors(list){
+function spreadBy(list,key){
   const out=[...list];
   for(let i=1;i<out.length;i++){
-    if(out[i].a===out[i-1].a){
+    if(key(out[i])===key(out[i-1])){
       let j=i+1;
-      while(j<out.length&&out[j].a===out[i-1].a)j++;
+      while(j<out.length&&key(out[j])===key(out[i-1]))j++;
       if(j<out.length){const [x]=out.splice(j,1);out.splice(i,0,x);}
     }
   }
   return out;
 }
+function spreadAuthors(list){return spreadBy(list,p=>p.a);}
 function interleaveByAuthor(posts){
   const by={};posts.forEach(p=>{(by[p.a]=by[p.a]||[]).push(p);});
   const qs=Object.values(by),out=[];let added=true;
@@ -81,6 +82,12 @@ function renderFeed(){
   // heavyweight posts (w>=4: company-watch and core-relevance stories) stay in the top bucket ~24h longer;
   // in the Developers feed, how-to and instructional videos get an extra boost so education leads
   const wOf=p=>(p.w||0)+((feedFilter==="Technical"&&p.vid)?3:0);
+  // Hourly-seeded jitter (0-2.4): posts of similar weight shuffle among themselves each
+  // hour, so the top of the feed intermixes security/industry/technical instead of
+  // presenting rigid weight-tier blocks, and repeat visits during the day feel fresh.
+  const hourSeed=new Date().toISOString().slice(0,13);
+  const jitter=p=>{const s=postKey(p)+"|"+hourSeed;let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return (h%25)/10;};
+  const topW=p=>wOf(p)+jitter(p);
   const today=new Date().toISOString().slice(0,10);
   // only genuine top stories (w>=7) earn the extra day at the top of the ranking
   const rankDay=p=>{if(wOf(p)>=7){const dt=new Date(p.d+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const s=dt.toISOString().slice(0,10);return s>today?today:s;}return p.d;};
@@ -102,9 +109,10 @@ function renderFeed(){
   posts=[...posts].sort((x,y)=>
     sort==="topic"?x.topic.localeCompare(y.topic)||y.d.localeCompare(x.d):
     sort==="new"?(y.d.localeCompare(x.d)||String(y.ts||"").localeCompare(String(x.ts||""))||POSTS.indexOf(x)-POSTS.indexOf(y)):
-    rankDay(y).localeCompare(rankDay(x))||wOf(y)-wOf(x)||y.d.localeCompare(x.d));
+    rankDay(y).localeCompare(rankDay(x))||topW(y)-topW(x)||y.d.localeCompare(x.d));
   if(sort==="top")posts=diversify(posts);
   if(sort!=="topic")posts=spreadAuthors(posts); // never two consecutive posts from the same source
+  if(sort==="top")posts=spreadBy(posts,p=>p.topic); // ...and no runs of a single topic either
   // single unified feed, newest first; role/pill/search are pure filters
   document.getElementById("feedCount").textContent=
     `${posts.length} post${posts.length===1?"":"s"}`+(activeRole!=="Everyone"?` · filtered for ${activeRole}`:"")+(q?` · matching "${q}"`:"");

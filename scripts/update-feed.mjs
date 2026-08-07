@@ -162,7 +162,7 @@ const FEEDS = [
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCJ1cS4hALCDHPnygfv6VOhQ", a: "Airbus (video)", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Company Watch", vid: true, kw: true, max: 2 },
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCD98uquOUa1kKSdcHgCKEXA", a: "Autodesk (video)", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", vid: true, kw: true, max: 2 },
   /* Magestic-niche industry press (verified Jul 17 2026) */
-  { w: 2, url: "https://develop3d.com/feed/", a: "Develop3D", who: "CAD/CAM & product development magazine", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", kw: true, max: 2 },
+  { w: 4, url: "https://develop3d.com/feed/", a: "Develop3D", who: "CAD/CAM & product development magazine", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://www.engineering.com/feed/", a: "Engineering.com", who: "Engineering technology news", av: "auto", t: "industry", tags: ["Developers", "Application Specialists"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://breakingdefense.com/feed/", a: "Breaking Defense", who: "Defense industry & procurement news", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://spacenews.com/feed/", a: "SpaceNews", who: "Space industry business news", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Industry AI", kw: true, max: 2 },
@@ -279,6 +279,8 @@ const WORKFLOW_RE = /\b(workflows?|playbooks?|best practices|how (i|we|to) (use|
 /* Clickbait shapes get demoted, never boosted — listicle bait reads as workflow content
    to the regex above but is exactly what shouldn't lead the team's feed. */
 const CLICKBAIT_RE = /\b(you should never|the one (command|trick|prompt|thing|setting)|one (command|trick|prompt) (that|to|you)|this (one|simple) (trick|command|prompt)|will (blow your|shock|change everything)|nobody (tells|talks about)|the secret (to|behind)|what happens when i|i (added|typed) one)\b/i;
+/* manufacturing-AI relevance, broader than the strict CORE_KW terms */
+const MFG_AI_RE = /\b(predictive maintenance|machine vision|quality inspection|digital twin|smart factory|shop floor|factory floor|CNC|additive manufacturing|3D print(?:ing|ed)?|robotic (?:welding|assembly|inspection)|industrial (?:AI|automation|robots?)|PLM|CAD software|CAM software|generative design|manufacturing (?:AI|software|automation))\b/i;
 /* operational/config changes to tools we run — the "admin email" class of news */
 const OPS_RE = /\b(auto.?mode|permissions? (mode|change|default)|defaults? (are )?(changing|changed)|deprecat(ed|ion|ing)?|breaking change|end[- ]of[- ]life|sunset(ting)?|pricing (change|update)|now requires?|managed settings|changelog|new default)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -312,6 +314,7 @@ for (const f of FEEDS) {
         /* operational changes to tools the team runs (permission defaults, deprecations,
            pricing, breaking changes) are must-see news and outrank ordinary coverage */
         + ((f.t === "official" && OPS_RE.test(it.title + " " + (it.desc || ""))) ? 4 : 0)
+        + (MFG_AI_RE.test(it.title + " " + (it.desc || "")) ? 2 : 0)
         - (CLICKBAIT_RE.test(it.title) ? 6 : 0);
       posts.push({
         a: f.a, s: f.who || `via ${new URL(f.url).hostname}`, av: f.av, t: f.t,
