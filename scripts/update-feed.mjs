@@ -271,7 +271,12 @@ const WAR_NOISE = /\b(combat|weapon|missile|warhead|munition|battlefield|kamikaz
    actually use these tools" content: workflow breakdowns, playbooks, prompting/context engineering,
    agentic-coding techniques (e.g. an Anthropic engineer explaining how to build a system that
    prompts itself). This is the content the hub exists to surface, so it outranks announcements. */
-const WORKFLOW_RE = /\b(workflows?|playbooks?|best practices|how (i|we|to) (use|build|code|work|ship)|prompt engineering|context engineering|prompting (guide|tips|claude|gpt)|agentic (coding|engineering|workflows?)|claude code|codex cli|subagents?|sub-agents?|multi-?agent|mcp servers?|skills? for claude|tips for (using|working with)|prompts itself|engineering with (ai|claude|llms)|coding with (ai|claude|llms)|pair.?programming with)\b/i;
+/* NOTE: deliberately does NOT match bare product names (claude code, codex cli) —
+   the watch feeds' own subject terms were self-boosting every item +5. */
+const WORKFLOW_RE = /\b(workflows?|playbooks?|best practices|how (i|we|to) (use|build|code|work|ship)|prompt engineering|context engineering|prompting (guide|tips|claude|gpt)|agentic (coding|engineering|workflows?)|subagents?|sub-agents?|multi-?agent|mcp servers?|skills? for claude|tips for (using|working with)|prompts itself|engineering with (ai|claude|llms)|coding with (ai|claude|llms)|pair.?programming with)\b/i;
+/* Clickbait shapes get demoted, never boosted — listicle bait reads as workflow content
+   to the regex above but is exactly what shouldn't lead the team's feed. */
+const CLICKBAIT_RE = /\b(you should never|the one (command|trick|prompt|thing|setting)|one (command|trick|prompt) (that|to|you)|this (one|simple) (trick|command|prompt)|will (blow your|shock|change everything)|nobody (tells|talks about)|the secret (to|behind)|what happens when i|i (added|typed) one)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const FIN_NOISE = /\b(stocks?|shares?|share price|earnings|dividend|NYSE|NASDAQ|price target|analyst rating|analysts? (?:say|rate|expect)|market cap|sell-?off|hedge fund|portfolio|52-week|strong buy|strong sell|buy rating|hold rating|undervalued|overvalued|bargain|too cheap|bullish|bearish|rall(?:y|ies)|upgraded?|downgraded?|top \d+ (?:AI )?stocks?|trading|traders?|IPO|ticker)\b|seeking ?alpha|motley ?fool|zacks|benzinga|marketbeat|barchart|insider ?monkey|investing\.com|investor.s business daily|simplywall|thestreet|barron|yahoo finance|24.7 ?wall ?st|cramer|\(NASDAQ|\(NYSE|\(ENXT|stock analysis|wall street|cash burn|investor (?:faith|confidence|concerns?|worr)|valuation/i;
 const CORE_KW = /\b(nest(?:ing|s)?|punch(?:ing|es)?|nibbling|bin[- ]?packing|packing optimi|composite|prepreg|ply|layup|lay-up|draping|kitting|AFP|ATL|fiber placement|tape laying|honeycomb|sheet ?metal|TruLaser|TruTops|laser projection|laser cutting|laser templat|LPT|waterjet|plasma cutting|press brake|turret|CAM\b|CAD\b|toolpath|NC program|post[- ]?processor|material (?:yield|utilization)|cutting path|fabricat)\b/i;
@@ -299,7 +304,8 @@ for (const f of FEEDS) {
         /* any story naming a watchlist company (customer, partner, or competitor) ranks higher */
         + (COMPANY_RE.test(it.title) ? 3 : 0)
         /* practitioner workflow/playbook content is the heaviest-weighted archetype on the hub */
-        + (WORKFLOW_RE.test(it.title) ? 5 : (WORKFLOW_RE.test(it.desc || "") ? 2 : 0));
+        + (WORKFLOW_RE.test(it.title) ? 5 : (WORKFLOW_RE.test(it.desc || "") ? 2 : 0))
+        - (CLICKBAIT_RE.test(it.title) ? 6 : 0);
       posts.push({
         a: f.a, s: f.who || `via ${new URL(f.url).hostname}`, av: f.av, t: f.t,
         ...(wt ? { w: wt } : {}),
@@ -455,6 +461,9 @@ merged.forEach(p => {
   /* paywalled teaser posts ("Premium: ..." subscriber-only stubs) are filler — drop
      them everywhere, including carried archive items */
   if (/^premium:/i.test((p.body || "").trim()) || /^premium:/i.test((p.link && p.link.b) || "")) p._drop = true;
+  /* retro-demote clickbait carried in the archive with inflated weights */
+  const title0 = (p.link && p.link.b) || (p.body || "").split("\n")[0];
+  if (CLICKBAIT_RE.test(title0)) p.w = Math.min(p.w || 0, 2);
   if (p.link && /bing\.com\/news\/apiclick/.test(p.link.u)) {
     const bm = p.link.u.match(/[?&]url=([^&]+)/);
     if (bm) { try { p.link.u = decodeURIComponent(bm[1]); p.link.s = new URL(p.link.u).hostname; } catch {} }
