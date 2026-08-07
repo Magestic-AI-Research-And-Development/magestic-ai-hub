@@ -118,6 +118,9 @@
     report(emsg || "Sign-in failed — try again.");
   }
   const nameFromEmail = e => e.split("@")[0].split(/[._-]+/).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
+  // Prefer the Microsoft (Entra) display name — matches company formatting
+  // (e.g. "Matthew DiGeronimo") — over the email-derived fallback.
+  const displayName = u => (u && u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || nameFromEmail(u.email);
   const initialsOf = n => n.split(/\s+/).map(w => w[0]).slice(0,2).join("").toUpperCase();
 
   /* ---------- auth box in the header ---------- */
@@ -125,7 +128,7 @@
     const box = document.getElementById("authBox");
     if (!box) return;
     if (user) {
-      const n = nameFromEmail(user.email);
+      const n = displayName(user);
       box.innerHTML = `<span class="auth-user"><span class="avatar-xs">${initialsOf(n)}</span>${esc(n)}</span>
         <a href="#" class="auth-link" onclick="HUB.signOut();return false;">Sign out</a>`;
     } else {
@@ -309,7 +312,7 @@
         await sb.from("shares").delete().eq("post_key", k).eq("user_id", user.id);
       } else {
         const { title, url } = postMeta(k);
-        const row = { user_id: user.id, author_name: nameFromEmail(user.email), post_key: k, post_title: title, post_url: url, created_at: new Date().toISOString() };
+        const row = { user_id: user.id, author_name: displayName(user), post_key: k, post_title: title, post_url: url, created_at: new Date().toISOString() };
         myShares.add(k);
         shares.unshift(row);
         decorate(); renderTeam();
@@ -354,7 +357,7 @@
       const to = profiles.find(m => m.id === who.value);
       const { title, url } = postMeta(k);
       const { error } = await sb.from("direct_shares").insert({
-        from_user: user.id, from_name: nameFromEmail(user.email),
+        from_user: user.id, from_name: displayName(user),
         to_user: who.value, post_key: k, post_title: title, post_url: url,
         note: note.trim() || null
       });
@@ -383,7 +386,7 @@
       const body = input && input.value.trim();
       if (!body || !user) return;
       input.value = "";
-      const { error } = await sb.from("comments").insert({ user_id: user.id, author_email: user.email, author_name: nameFromEmail(user.email), post_key: k, body });
+      const { error } = await sb.from("comments").insert({ user_id: user.id, author_email: user.email, author_name: displayName(user), post_key: k, body });
       if (!error) { counts[k] = (counts[k] || 0) + 1; decorate(); }
       renderComments(k);
     },
