@@ -314,14 +314,15 @@ const SWE_SERIES=[
  {n:"Anthropic (Claude)",c:"#16233f",pts:[
    ["2024-06",49,"3.5 Sonnet",0,20,"middle"],["2025-02",62,"3.7 Sonnet",-8,-8,"end"],
    ["2025-06",81,"Opus 4.5",-6,-11,"end"],["2025-11",87.5,"Opus 4.7",-8,-8,"end"],
-   ["2026-03",88.5,"Opus 4.8",10,4,"start"],["2026-07",95,"Fable 5",9,4,"start"]]},
+   ["2026-03",88.5,"Opus 4.8",10,4,"start"],["2026-07",95,"Fable 5",-8,10,"end"],
+   ["2026-08",96,"Opus 5",9,0,"start"]]},
  {n:"OpenAI",c:"#3f7d44",pts:[
    ["2025-01",49,"o1",8,4,"start"],["2025-04",69,"o3",-8,-6,"end"],
    ["2025-08",75,"GPT-5",6,15,"start"],["2026-01",80.5,"GPT-5.2",-8,-8,"end"],
-   ["2026-07",80.5,"GPT-5.5",9,4,"start"]]},
+   ["2026-07",80.5,"GPT-5.5",-8,14,"end"],["2026-08",96.2,"GPT-5.6 Sol",9,14,"start"]]},
  {n:"Google",c:"#4a90d9",pts:[
    ["2025-03",63.8,"Gemini 2.5 Pro",6,15,"start"],["2025-11",76,"Gemini 3 Pro",6,15,"start"],
-   ["2026-05",80.5,"Gemini 3.1 Pro",0,-11,"middle"]]},
+   ["2026-05",80.6,"Gemini 3.1 Pro",0,-11,"middle"]]},
  {n:"Open weight frontier",c:"#c96a2b",pts:[
    ["2024-12",42,"DeepSeek V3",0,18,"middle"],["2025-02",49,"DeepSeek R1",6,15,"start"],
    ["2025-07",69.5,"Qwen3-Coder",0,18,"middle"],["2026-02",77.5,"DeepSeek V4 Pro",6,15,"start"],
@@ -330,7 +331,7 @@ const SWE_SERIES=[
 function buildSweSvg(){
   const W=820,H=560,L=64,R=150,T=24,B=46;
   const mIdx=d=>{const[y,m]=d.split("-").map(Number);return (y-2024)*12+(m-5);}; // May 2024 = 0
-  const xMax=mIdx("2026-07"),yMin=30,yMax=100;
+  const xMax=mIdx("2026-09"),yMin=30,yMax=100;
   const X=d=>L+(W-L-R)*(mIdx(d)/xMax), Y=v=>T+(H-T-B)*(1-(v-yMin)/(yMax-yMin));
   let out=[];
   for(let v=30;v<=100;v+=10){out.push(`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" class="sw-grid"/><text x="${L-10}" y="${Y(v)+4}" class="sw-lab" text-anchor="end">${v}</text>`);}
@@ -362,7 +363,7 @@ function buildSweSvg(){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="SWE-bench Verified coding scores over time, grouped into four lab tracks: Anthropic, OpenAI, Google, and open weight frontier" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
- ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["Claude Opus 4.8",25,true],
+ ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],
  ["Gemini 3.1 Pro",15,true],["GPT-5.6 Terra",15,true],["Claude Sonnet 5",10,true],
  ["Gemini 3.5 Flash",9,true],["Qwen3.7 Max (hosted)",7.5,false],["Grok 4.5",6,true],
  ["GPT-5.6 Luna",6,true],["Inkling (hosted)",4.68,false],["Muse Spark 1.1",4.25,true],
