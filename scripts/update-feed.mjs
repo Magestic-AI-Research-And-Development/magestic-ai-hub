@@ -101,11 +101,11 @@ const FEEDS = [
      Chinese-model scrutiny, data sovereignty, AI governance frameworks. w:2 so it ranks with premium trade press. */
   /* Breaking AI security & majors watch (added Jul 23 2026 after the OpenAI/Hugging Face breach was missed):
      high-weight lanes so major security incidents and frontier-lab news reach the top of the feed within a refresh. */
-  { w: 6, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 2 },
+  { w: 8, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 2 },
   { w: 6, url: "https://www.bing.com/news/search?q=%22Hugging%20Face%22&format=rss", a: "Hugging Face Watch", who: "News about the open-model hub", av: "auto", t: "official", tags: ["Developers", "Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22OpenAI%22&format=rss", a: "OpenAI News Watch", who: "Major OpenAI news across all outlets (Reuters, Bloomberg, CNBC syndicated)", av: "openai", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22Anthropic%22&format=rss", a: "Anthropic News Watch", who: "Major Anthropic news across all outlets", av: "anthropic", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
-  { w: 2, url: "https://feeds.feedburner.com/TheHackersNews", kw: "title", a: "The Hacker News", who: "Cybersecurity news · AI-related items only", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Regulatory", max: 2 },
+  { w: 4, url: "https://feeds.feedburner.com/TheHackersNews", kw: "title", a: "The Hacker News", who: "Cybersecurity news · AI-related items only", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Regulatory", max: 2 },
   { w: 3, url: "https://www.bing.com/news/search?q=AI%20(regulation%20OR%20legislation%20OR%20%22executive%20order%22)&format=rss", a: "AI Regulation Watch", who: "US & EU AI regulation news", av: "auto", t: "official", tags: ["Marketing & Sales", "Product Managers", "Everyone"], topic: "Regulatory", max: 3 },
   { w: 3, url: "https://www.bing.com/news/search?q=AI%20(ITAR%20OR%20%22export%20control%22%20OR%20%22export%20controls%22%20OR%20%22export%20restrictions%22)&format=rss", a: "AI Export Controls & ITAR", who: "Export control, ITAR, and trade-restriction news touching AI", av: "auto", t: "official", tags: ["Marketing & Sales", "Product Managers"], topic: "Regulatory", max: 3 },
   { w: 3, url: "https://www.bing.com/news/search?q=%22Chinese%20AI%22%20(ban%20OR%20security%20OR%20restrictions%20OR%20%22national%20security%22)&format=rss", a: "Chinese AI Models · Security & Policy", who: "Security, privacy, and policy scrutiny of Chinese AI models", av: "auto", t: "official", tags: ["Marketing & Sales", "Developers", "Everyone"], topic: "Regulatory", max: 3 },
@@ -480,7 +480,7 @@ merged.forEach(p => {
     p.w = (c && c.p ? 5 : 4) + (c && c.side === "s" ? 1 : 0) + ((c && c.score || 0) / 10) + (CORE_KW.test(p.body || "") ? 2 : 0) - (c && c.noisy && !CORE_KW.test(p.body || "") ? 2 : 0);
   }
   /* retro-cap the security lane and total weight (boost stacking produced w14-20 outliers) */
-  if (p.a === "AI Security & Threat Watch") p.w = Math.min(p.w || 0, 6);
+  if (p.a === "AI Security & Threat Watch") p.w = Math.min(Math.max(p.w || 0, 8), 8);
   p.w = Math.min(p.w || 0, 10);
 });
 /* Bing thumbnails are upscaled from tiny sources — replace with the article's full-res og:image.
