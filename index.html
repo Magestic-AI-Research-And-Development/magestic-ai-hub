@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <title>Magestic AI Hub · Research &amp; Learning Platform</title>
-<link rel="stylesheet" href="assets/styles.css?v=42">
+<link rel="stylesheet" href="assets/styles.css?v=43">
 </head>
 <body>
 <div id="authGate">
@@ -43,6 +43,14 @@
     <div id="authBox" class="auth-box"></div>
   </div>
 </header>
+<script>
+/* Runs as soon as the header is parsed — before the main scripts — to kill the
+   sign-in flash: inject the gate logo immediately, and if a stored session
+   exists, hide the gate up front (the auth code re-shows it if the session
+   turns out to be invalid). */
+try{var _hl=document.querySelector(".logo-img"),_gl=document.getElementById("gateLogo");if(_hl&&_gl)_gl.src=_hl.src;}catch(e){}
+try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")){var _g=document.getElementById("authGate");if(_g)_g.hidden=true;}}catch(e){}
+</script>
 
 <!-- ================= FEED VIEW ================= -->
 <div class="wrap" id="view-feed">
@@ -305,8 +313,8 @@
 <script src="data/feed-live.js"></script>
 <script src="data/directory.js"></script>
 <script src="data/companies.js"></script>
-<script src="assets/app.js?v=42"></script>
+<script src="assets/app.js?v=43"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';document.head.appendChild(s);"></script>
-<script src="assets/hub.js?v=42"></script>
+<script src="assets/hub.js?v=43"></script>
 </body>
 </html>
