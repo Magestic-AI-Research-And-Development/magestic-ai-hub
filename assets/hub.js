@@ -381,6 +381,27 @@
   };
 
   /* ---------- init ---------- */
+  // OAuth return handler: after Microsoft sign-in, tokens arrive in the URL
+  // fragment. Apply them explicitly — relying on the library's automatic
+  // detection proved unreliable (backend logged successful logins while the
+  // page kept showing the gate).
+  (async function handleOAuthReturn(){
+    try {
+      if (!location.hash || location.hash.indexOf("access_token=") === -1) return;
+      const h = new URLSearchParams(location.hash.slice(1));
+      const at = h.get("access_token"), rt = h.get("refresh_token");
+      if (!at || !rt) return;
+      history.replaceState(null, "", location.pathname + location.search);
+      const { data, error } = await sb.auth.setSession({ access_token: at, refresh_token: rt });
+      if (error || !data || !data.session) { console.warn("OAuth session apply failed:", error); return; }
+      persistSession(data.session);
+      user = data.session.user;
+      const g = document.getElementById("authGate"); if (g) g.remove();
+      document.body.style.overflow = "";
+      try { renderAuthBox(); } catch (e) {}
+      setTimeout(refreshData, 0);
+    } catch (e) { console.warn("OAuth return handling failed:", e); }
+  })();
   sb.auth.onAuthStateChange((_evt, session) => {
     user = session ? session.user : null;
     renderAuthBox();
