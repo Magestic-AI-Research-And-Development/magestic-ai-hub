@@ -52,7 +52,12 @@
 
   const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   function gateMsg(t, ok){ const m = document.getElementById("gateMsg"); if (m) { m.textContent = t; m.className = "hub-msg" + (ok ? " ok" : " err"); } }
-  function showGate(show){ const g = document.getElementById("authGate"); if (g) g.hidden = !show; document.body.style.overflow = show ? "hidden" : ""; }
+  function showGate(show){
+    const g = document.getElementById("authGate"); if (g) g.hidden = !show;
+    // if the pre-paint check hid the gate but the session proved invalid, un-hide it
+    if (show) document.documentElement.classList.remove("authed");
+    document.body.style.overflow = show ? "hidden" : "";
+  }
   // Direct-fetch sign-in: bypasses the supabase-js auth path (which can deadlock on GitHub
   // Pages, leaving the button stuck on "Signing in…"). A plain fetch cannot hang the UI, and
   // we reveal the app the instant the token comes back — before any SDK call runs.
