@@ -80,7 +80,12 @@ function renderFeed(){
   const wOf=p=>(p.w||0)+((feedFilter==="Developers"&&p.vid)?3:0);
   const today=new Date().toISOString().slice(0,10);
   const rankDay=p=>{if(wOf(p)>=4){const dt=new Date(p.d+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const s=dt.toISOString().slice(0,10);return s>today?today:s;}return p.d;};
-  posts=[...posts].sort((x,y)=>sort==="topic"?x.topic.localeCompare(y.topic)||y.d.localeCompare(x.d):rankDay(y).localeCompare(rankDay(x))||wOf(y)-wOf(x)||y.d.localeCompare(x.d));
+  // "Top stories" keeps the weighted top-bucket behavior; "Newest first" is strictly
+  // chronological (date desc, then feed-file order, which the generator writes date-desc).
+  posts=[...posts].sort((x,y)=>
+    sort==="topic"?x.topic.localeCompare(y.topic)||y.d.localeCompare(x.d):
+    sort==="new"?(y.d.localeCompare(x.d)||POSTS.indexOf(x)-POSTS.indexOf(y)):
+    rankDay(y).localeCompare(rankDay(x))||wOf(y)-wOf(x)||y.d.localeCompare(x.d));
   if(sort!=="topic")posts=spreadAuthors(posts); // never two consecutive posts from the same source
   // single unified feed, newest first; role/pill/search are pure filters
   document.getElementById("feedCount").textContent=
