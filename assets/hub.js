@@ -133,11 +133,8 @@
     div.innerHTML = `
       <div class="hub-modal-card">
         <h3>Magestic team sign in</h3>
-        <input id="hubEmail" type="email" placeholder="you@${TEAM_DOMAIN}" autocomplete="email">
-        <input id="hubPass" type="password" placeholder="Password" autocomplete="current-password">
         <div id="hubMsg" class="hub-msg"></div>
         <div class="hub-modal-actions">
-          <button class="auth-btn" onclick="HUB.submit()">Sign in / create account</button>
           <button class="auth-btn" style="background:#2f2f2f" onclick="HUB.msSignIn()">Sign in with Microsoft</button>
           <a href="#" class="auth-link" onclick="HUB.closeModal();return false;">Cancel</a>
         </div>
