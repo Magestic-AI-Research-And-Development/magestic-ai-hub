@@ -101,7 +101,7 @@ const FEEDS = [
      Chinese-model scrutiny, data sovereignty, AI governance frameworks. w:2 so it ranks with premium trade press. */
   /* Breaking AI security & majors watch (added Jul 23 2026 after the OpenAI/Hugging Face breach was missed):
      high-weight lanes so major security incidents and frontier-lab news reach the top of the feed within a refresh. */
-  { w: 9, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 4 },
+  { w: 6, url: "https://www.bing.com/news/search?q=AI%20(hacked%20OR%20breach%20OR%20%22prompt%20injection%22%20OR%20vulnerability%20OR%20exploit)&format=rss", a: "AI Security & Threat Watch", who: "AI security incidents, breaches, and threat research", av: "auto", t: "official", tags: ["Developers", "Product Managers", "Everyone"], topic: "Regulatory", max: 2 },
   { w: 6, url: "https://www.bing.com/news/search?q=%22Hugging%20Face%22&format=rss", a: "Hugging Face Watch", who: "News about the open-model hub", av: "auto", t: "official", tags: ["Developers", "Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22OpenAI%22&format=rss", a: "OpenAI News Watch", who: "Major OpenAI news across all outlets (Reuters, Bloomberg, CNBC syndicated)", av: "openai", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
   { w: 5, url: "https://www.bing.com/news/search?q=%22Anthropic%22&format=rss", a: "Anthropic News Watch", who: "Major Anthropic news across all outlets", av: "anthropic", t: "official", tags: ["Everyone"], topic: "Models", max: 3 },
@@ -365,9 +365,11 @@ async function pullCompany(c) {
         d: it.date.toISOString().slice(0, 10),
         when: it.date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
         body: it.title + (it.desc && !norm(it.desc).startsWith(norm(it.title).slice(0, 50)) ? "\n\n" + it.desc + "…" : ""), tags: ["Marketing & Sales", "Product Managers"], topic: "Company Watch",
-        /* Company Watch outranks everything else that day: watchlist companies (customers, partners,
-           competitors) are the highest-value news class. Priority accounts get the strongest boost. */
-        w: (c.p ? 7 : 6) + (c.side === "s" ? 1 : 0) + ((c.score || 0) / 10) + (CORE_KW.test(it.title + " " + it.desc) ? 2 : 0),
+        /* Company Watch ranks high but must compete: priority accounts and competitors get a
+           boost, and industry-core relevance (nesting/composites/CAM terms) is the strongest
+           single signal — a composites-relevant competitor story still tops the feed (~8),
+           but generic watchlist chatter no longer wallpapers it. */
+        w: (c.p ? 5 : 4) + (c.side === "s" ? 1 : 0) + ((c.score || 0) / 10) + (CORE_KW.test(it.title + " " + it.desc) ? 2 : 0),
         ...(it.img ? { img: it.img } : {}),
         link: { u: it.link, b: it.title.slice(0, 90), s: (()=>{try{return new URL(it.link).hostname}catch{return "news"}})() },
       });
@@ -470,12 +472,16 @@ merged.forEach(p => {
   }
   if (p.img) p.img = upImg(p.img);
   if (p.tags) { const seen = new Set(); p.tags = p.tags.map(t => t === "C-Suite" ? "Marketing & Sales" : t).filter(t => !seen.has(t) && seen.add(t)); }
-  /* retro-apply the company-watch boost to carried archive items */
+  /* retro-apply the (rebalanced) company-watch weight to carried archive items — set, not
+     max, so weight rebalances propagate to the archive instead of old inflation persisting */
   if (p.topic === "Company Watch") {
     const c = WATCHLIST.find(x => x.n === p.a);
     if (c && c.bad && new RegExp(c.bad, "i").test((p.body || "") + " " + (p.link ? p.link.u : ""))) p._drop = true;
-    p.w = Math.max(p.w || 0, (c && c.p ? 7 : 6) + (c && c.side === "s" ? 1 : 0) + ((c && c.score || 0) / 10) + (CORE_KW.test(p.body || "") ? 2 : 0));
+    p.w = (c && c.p ? 5 : 4) + (c && c.side === "s" ? 1 : 0) + ((c && c.score || 0) / 10) + (CORE_KW.test(p.body || "") ? 2 : 0);
   }
+  /* retro-cap the security lane and total weight (boost stacking produced w14-20 outliers) */
+  if (p.a === "AI Security & Threat Watch") p.w = Math.min(p.w || 0, 6);
+  p.w = Math.min(p.w || 0, 10);
 });
 /* Bing thumbnails are upscaled from tiny sources — replace with the article's full-res og:image.
    60 per run, so the whole archive upgrades over a few refreshes. */

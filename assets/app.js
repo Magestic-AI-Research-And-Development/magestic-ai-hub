@@ -79,13 +79,28 @@ function renderFeed(){
   // in the Developers feed, how-to and instructional videos get an extra boost so education leads
   const wOf=p=>(p.w||0)+((feedFilter==="Developers"&&p.vid)?3:0);
   const today=new Date().toISOString().slice(0,10);
-  const rankDay=p=>{if(wOf(p)>=4){const dt=new Date(p.d+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const s=dt.toISOString().slice(0,10);return s>today?today:s;}return p.d;};
+  // only genuine top stories (w>=7) earn the extra day at the top of the ranking
+  const rankDay=p=>{if(wOf(p)>=7){const dt=new Date(p.d+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const s=dt.toISOString().slice(0,10);return s>today?today:s;}return p.d;};
+  // Diversity guarantee for the opening screen: within the first 24 positions no source
+  // appears more than twice and no topic more than 4 times; overflow slides just below.
+  // A research feed's first screen should be a portfolio, not one lane's wallpaper.
+  const diversify=list=>{
+    const HEAD=24,MAX_SRC=2,MAX_TOPIC=4,head=[],defer=[],bySrc={},byTopic={};
+    let i=0;
+    for(;i<list.length&&head.length<HEAD;i++){
+      const p=list[i],a=bySrc[p.a]||0,t=byTopic[p.topic]||0;
+      if(a>=MAX_SRC||t>=MAX_TOPIC){defer.push(p);continue;}
+      bySrc[p.a]=a+1;byTopic[p.topic]=t+1;head.push(p);
+    }
+    return [...head,...defer,...list.slice(i)];
+  };
   // "Top stories" keeps the weighted top-bucket behavior; "Newest first" is strictly
   // chronological (date desc, then feed-file order, which the generator writes date-desc).
   posts=[...posts].sort((x,y)=>
     sort==="topic"?x.topic.localeCompare(y.topic)||y.d.localeCompare(x.d):
     sort==="new"?(y.d.localeCompare(x.d)||String(y.ts||"").localeCompare(String(x.ts||""))||POSTS.indexOf(x)-POSTS.indexOf(y)):
     rankDay(y).localeCompare(rankDay(x))||wOf(y)-wOf(x)||y.d.localeCompare(x.d));
+  if(sort==="top")posts=diversify(posts);
   if(sort!=="topic")posts=spreadAuthors(posts); // never two consecutive posts from the same source
   // single unified feed, newest first; role/pill/search are pure filters
   document.getElementById("feedCount").textContent=
