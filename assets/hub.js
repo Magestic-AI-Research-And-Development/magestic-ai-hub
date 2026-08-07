@@ -260,7 +260,13 @@
     closeModal(){ const m = document.getElementById("hubModal"); if (m) m.hidden = true; },
     async submit(){ return doSignIn("hubEmail", "hubPass", msg, () => HUB.closeModal()); },
     async gateSubmit(){ return doSignIn("gateEmail", "gatePass", gateMsg, () => showGate(false)); },
-    async signOut(){ await sb.auth.signOut(); },
+    async signOut(){
+      // The gate element is removed from the DOM on sign-in, so a reload is the
+      // reliable way back to the login screen. Clear the stored session first.
+      try { await sb.auth.signOut(); } catch (e) {}
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      location.reload();
+    },
     async msSignIn(){
       // Entra ID (Azure) SSO via Supabase. On a company machine Edge is already
       // signed into Microsoft at the OS level, so this round-trip is silent.
