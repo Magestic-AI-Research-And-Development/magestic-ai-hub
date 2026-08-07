@@ -256,7 +256,7 @@
 
 /* ---------- post media (photos & video thumbnails) ---------- */
 .post-media{position:relative;display:block;margin-bottom:10px}
-.post-media img{width:100%;min-height:280px;max-height:430px;border-radius:8px;object-fit:cover;display:block;background:#111}
+.post-media img{width:100%;height:auto;max-height:430px;border-radius:8px;object-fit:cover;display:block;background:#111}
 .play-badge{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:44px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.65)}
 /* scrollable live wire, newest first */

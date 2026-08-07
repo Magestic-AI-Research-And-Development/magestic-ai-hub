@@ -89,7 +89,7 @@ function renderFeed(){
           <div class="when">${p.when} · 2026</div>
         </div>
       </div>
-      <div class="post-body">${p.body}</div>
+      <div class="post-body">${String(p.body||"").trim().replace(/\n{3,}/g,"\n\n")}</div>
       ${p.img?`<a class="post-media" href="${p.link?p.link.u:"#"}" target="_blank" rel="noopener"><img src="${p.img}" loading="lazy" alt=""${/maxresdefault/.test(p.img)?` onerror="this.onerror=null;this.src='${p.img.replace("maxresdefault","hqdefault")}'"`:""}>${p.vid?'<span class="play-badge">▶</span>':''}</a>`:""}
       ${p.link?`<a class="post-link" href="${p.link.u}" target="_blank" rel="noopener"><b>${p.link.b} ↗</b><span>${p.link.s}</span></a>`:""}
       <div class="tags">
