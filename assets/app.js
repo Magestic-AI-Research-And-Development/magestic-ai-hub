@@ -1,7 +1,25 @@
 /* Magestic AI Hub — app logic.
    Data comes from data/*.js (content, feed, feed-live, directory, companies). */
 
-const POSTS = [...(typeof POSTS_LIVE !== "undefined" ? POSTS_LIVE : []), ...POSTS_CURATED];
+let POSTS = [...(typeof POSTS_LIVE !== "undefined" ? POSTS_LIVE : []), ...POSTS_CURATED];
+/* Live refresh: the feed regenerates server-side all day, but a static page never
+   sees it without a reload. Poll the data file every 10 minutes and re-render. */
+async function pollFeed(){
+  try{
+    const r=await fetch("data/feed-live.js?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    const t=await r.text();
+    const a=t.indexOf("const POSTS_LIVE = "),b=t.indexOf(";\nconst FEED_GENERATED");
+    if(a<0||b<0)return;
+    const fresh=JSON.parse(t.slice(a+"const POSTS_LIVE = ".length,b));
+    POSTS=[...fresh,...POSTS_CURATED];
+    const gen=(t.match(/FEED_GENERATED = "([^"]+)"/)||[])[1];
+    const lu=document.getElementById("lastUpdated");
+    if(lu&&gen)lu.textContent="Updated "+new Date(gen).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    renderFeed();
+  }catch(e){}
+}
+setInterval(pollFeed,10*60*1000);
 let activeRole = "Everyone";
 let feedFilter = "All";
 const SECURITY_SRC=/^(AI Security & Threat Watch|The Hacker News|Chinese AI Models · Security & Policy|Chinese Open Models · Risk Watch)$/;
@@ -94,13 +112,18 @@ function renderFeed(){
   // Diversity guarantee for the opening screen: within the first 24 positions no source
   // appears more than twice and no topic more than 4 times; overflow slides just below.
   // A research feed's first screen should be a portfolio, not one lane's wallpaper.
+  // Story clustering: different outlets covering the same event share title words —
+  // only one telling of a story earns a slot in the opening screen.
+  const STOPW=new Set(["the","a","an","of","to","in","on","for","and","with","as","by","at","its","is","are","was","will","from","that","this","after","new","says","said","how","what","why","more","over","into"]);
+  const sigOf=p=>new Set((((p.link&&p.link.b)||String(p.body||"").split("\n")[0]).toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>3&&!STOPW.has(w))));
+  const similar=(s1,s2)=>{let n=0;for(const w of s1)if(s2.has(w))n++;const m=Math.min(s1.size,s2.size)||1;return n>=3&&n/m>=0.5;};
   const diversify=list=>{
-    const HEAD=24,MAX_SRC=2,MAX_TOPIC=4,head=[],defer=[],bySrc={},byTopic={};
+    const HEAD=24,MAX_SRC=2,MAX_TOPIC=4,head=[],defer=[],bySrc={},byTopic={},sigs=[];
     let i=0;
     for(;i<list.length&&head.length<HEAD;i++){
-      const p=list[i],a=bySrc[p.a]||0,t=byTopic[p.topic]||0;
-      if(a>=MAX_SRC||t>=MAX_TOPIC){defer.push(p);continue;}
-      bySrc[p.a]=a+1;byTopic[p.topic]=t+1;head.push(p);
+      const p=list[i],a=bySrc[p.a]||0,t=byTopic[p.topic]||0,sg=sigOf(p);
+      if(a>=MAX_SRC||t>=MAX_TOPIC||sigs.some(s=>similar(sg,s))){defer.push(p);continue;}
+      bySrc[p.a]=a+1;byTopic[p.topic]=t+1;sigs.push(sg);head.push(p);
     }
     return [...head,...defer,...list.slice(i)];
   };
