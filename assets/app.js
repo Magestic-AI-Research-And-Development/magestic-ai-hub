@@ -425,13 +425,16 @@ function buildSweSvg(){
 /* Snapshot leaderboards for the two headline reasoning benchmarks.
    [model, score %, closedWeight]. Only models with published scores. */
 const HLE_BARS=[
- ["Claude Fable 5",53.3,true],["Claude Opus 5",52.6,true],["Grok 4",50.7,true],
- ["GPT-5.6 Sol",47.2,true],["Gemini 3.1 Pro",46.4,true],["Kimi K2.5 (open)",31.5,false]
+ ["Claude Fable 5",53.3,true],["Claude Opus 5",52.6,true],["GPT-5.6 Sol",47.2,true],
+ ["Claude Opus 4.8",45.7,true],["Muse Spark 1.1",45.1,true],["Gemini 3.1 Pro",44.7,true],
+ ["Kimi K3",44.3,true],["Grok 4.5",40.3,true],["GLM-5.2 (open)",40.1,false],
+ ["Kimi K2.5 (open)",29.4,false]
 ];
 const ARC2_BARS=[
  ["GPT-5.6 Sol",92.5,true],["Claude Opus 5",90.4,true],["GPT-5.5",85,true],
- ["Gemini 3.1 Deep Think",85,true],["GPT-5.4 Pro",83,true],
- ["Gemini 3.1 Pro",77.1,true],["Claude Opus 4.6",69,true]
+ ["Gemini 3.1 Deep Think",85,true],["GPT-5.6 Terra",83.9,true],["GPT-5.4 Pro",83.3,true],
+ ["Gemini 3.1 Pro",77.1,true],["Claude Opus 4.7",75.8,true],["Claude Opus 4.8",72.1,true],
+ ["Claude Opus 4.6",69,true]
 ];
 function buildPctBarsSvg(data){
   const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+data.length*rowH;
@@ -448,10 +451,10 @@ function buildPctBarsSvg(data){
 }
 const COST_BARS=[
  ["Claude Fable 5",50,true],["Claude Mythos 5",50,true],["GPT-5.6 Sol",30,true],
- ["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],
+ ["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],["Kimi K3",15,true],
  ["Gemini 3.1 Pro",12,true],["GPT-5.6 Terra",12,true],["Claude Sonnet 5",10,true],
- ["Gemini 3.5 Flash",9,true],["Qwen3.7 Max (hosted)",7.5,false],["Grok 4.5",6,true],
- ["Inkling (hosted)",4.68,false],["Muse Spark 1.1",4.25,true],
+ ["Gemini 3.5 Flash",9,true],["Qwen3.7 Max",7.5,true],["Grok 4.5",6,true],
+ ["Inkling (hosted)",4.68,false],["GLM-5.2 (hosted)",4.4,false],["Muse Spark 1.1",4.25,true],
  ["Kimi K2 (hosted)",3,false],["DeepSeek V4 (hosted)",1.7,false],["GPT-5.6 Luna",1.2,true]
 ];
 function buildCostSvg(){
