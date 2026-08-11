@@ -21,8 +21,8 @@ const FEEDS = [
   { w: 6, url: "https://github.com/anthropics/claude-code/releases.atom", who: "Claude Code releases & changelog", a: "Claude Code Changelog", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 2, noimg: 1, prefix: "Claude Code release " },
   { url: "https://blog.google/technology/ai/rss/", who: "Official Google AI blog", a: "Google AI", av: "google", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
   { url: "https://github.blog/feed/", who: "Official GitHub blog", a: "GitHub", av: "github", t: "official", tags: ["Developers"], topic: "Tools", max: 3 },
-  { w: 4, url: "https://www.compositesworld.com/rss/news", kw: true, who: "The composites manufacturing industry's leading publication", a: "CompositesWorld", av: "industry", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 4 },
-  { w: 4, url: "https://mtdcnc.com/feed/", kw: true, who: "CNC machining industry news & video (UK)", a: "MTDCNC", av: "industry", t: "industry", tags: ["Developers", "Application Specialists"], topic: "Industry AI", max: 3 },
+  { w: 5, url: "https://www.compositesworld.com/rss/news", kw: true, who: "The composites manufacturing industry's leading publication", a: "CompositesWorld", av: "industry", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 4 },
+  { w: 5, url: "https://mtdcnc.com/feed/", kw: true, who: "CNC machining industry news & video (UK)", a: "MTDCNC", av: "industry", t: "industry", tags: ["Developers", "Application Specialists"], topic: "Industry AI", max: 3 },
   /* SMEs & thought leaders with open feeds (max 2 each, all equal) */
   { url: "https://simonwillison.net/atom/everything/", who: "Independent AI researcher & blogger", a: "Simon Willison", av: "willison", t: "voice", tags: ["Developers", "Database Engineers"], topic: "Adoption" },
   { url: "https://www.oneusefulthing.org/feed", who: "Wharton professor · AI adoption (One Useful Thing)", a: "Ethan Mollick", av: "mollick", t: "voice", tags: ["Marketing & Sales", "Product Managers", "Everyone"], topic: "Adoption" },
@@ -84,15 +84,15 @@ const FEEDS = [
   { w: -2, url: "https://sloanreview.mit.edu/feed/", kw: "title", a: "MIT Sloan Mgmt Review", av: "auto", t: "industry", tags: ["Marketing & Sales", "Product Managers"], topic: "Adoption" },
   { w: -2, url: "https://knowledge.wharton.upenn.edu/feed/", kw: "title", a: "Knowledge at Wharton", av: "auto", t: "industry", tags: ["Marketing & Sales", "Product Managers"], topic: "Adoption" },
   { w: -2, url: "https://www.mckinsey.com/insights/rss", kw: "title", a: "McKinsey Insights", av: "auto", t: "industry", tags: ["Marketing & Sales", "Product Managers"], topic: "Adoption" },
-  { w: 4, url: "https://www.mmsonline.com/rss/news", kw: true, who: "Modern Machine Shop · machining technology", a: "Modern Machine Shop", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://www.additivemanufacturing.media/rss/news", kw: true, who: "Industrial 3D printing publication", a: "Additive Manufacturing Media", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://www.productionmachining.com/rss/news", kw: true, who: "Precision machining publication", a: "Production Machining", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://www.manufacturingdive.com/feeds/news/", kw: true, who: "Manufacturing industry business news", a: "Manufacturing Dive", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://iiot-world.com/feed/", who: "Industrial IoT & AI publication", a: "IIoT World", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 5, url: "https://www.mmsonline.com/rss/news", kw: true, who: "Modern Machine Shop · machining technology", a: "Modern Machine Shop", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://www.additivemanufacturing.media/rss/news", kw: true, who: "Industrial 3D printing publication", a: "Additive Manufacturing Media", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://www.productionmachining.com/rss/news", kw: true, who: "Precision machining publication", a: "Production Machining", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://www.manufacturingdive.com/feeds/news/", kw: true, who: "Manufacturing industry business news", a: "Manufacturing Dive", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://iiot-world.com/feed/", who: "Industrial IoT & AI publication", a: "IIoT World", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
   { domain: true, url: "https://www.therobotreport.com/feed/", who: "Robotics business & engineering news", a: "The Robot Report", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 4, url: "https://compositesmanufacturingmagazine.com/feed/", who: "American Composites Manufacturers Association magazine", a: "Composites Manufacturing", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://www.aerospacemanufacturinganddesign.com/rss/", a: "Aerospace Mfg & Design", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
-  { w: 3, url: "https://www.moldmakingtechnology.com/rss/news", kw: true, who: "Mold & tooling manufacturing technology", a: "MoldMaking Technology", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 3 },
+  { w: 5, url: "https://compositesmanufacturingmagazine.com/feed/", who: "American Composites Manufacturers Association magazine", a: "Composites Manufacturing", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://www.aerospacemanufacturinganddesign.com/rss/", a: "Aerospace Mfg & Design", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI" },
+  { w: 4, url: "https://www.moldmakingtechnology.com/rss/news", kw: true, who: "Mold & tooling manufacturing technology", a: "MoldMaking Technology", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 3 },
   { url: "https://www.ptonline.com/rss/news", kw: true, who: "Plastics Technology · processing & molding", a: "Plastics Technology", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 3 },
   { url: "https://www.tctmagazine.com/rss/", kw: true, who: "Additive manufacturing & 3D printing intelligence", a: "TCT Magazine", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 3 },
   { url: "https://3dprintingindustry.com/feed/", kw: true, who: "Additive manufacturing industry news", a: "3D Printing Industry", av: "auto", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 3 },
@@ -162,7 +162,7 @@ const FEEDS = [
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCJ1cS4hALCDHPnygfv6VOhQ", a: "Airbus (video)", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Company Watch", vid: true, kw: true, max: 2 },
   { url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCD98uquOUa1kKSdcHgCKEXA", a: "Autodesk (video)", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", vid: true, kw: true, max: 2 },
   /* Magestic-niche industry press (verified Jul 17 2026) */
-  { w: 4, url: "https://develop3d.com/feed/", a: "Develop3D", who: "CAD/CAM & product development magazine", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", kw: true, max: 2 },
+  { w: 5, url: "https://develop3d.com/feed/", a: "Develop3D", who: "CAD/CAM & product development magazine", av: "auto", t: "industry", tags: ["Developers", "Product Managers"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://www.engineering.com/feed/", a: "Engineering.com", who: "Engineering technology news", av: "auto", t: "industry", tags: ["Developers", "Application Specialists"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://breakingdefense.com/feed/", a: "Breaking Defense", who: "Defense industry & procurement news", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Industry AI", kw: true, max: 2 },
   { url: "https://spacenews.com/feed/", a: "SpaceNews", who: "Space industry business news", av: "auto", t: "industry", tags: ["Marketing & Sales"], topic: "Industry AI", kw: true, max: 2 },
@@ -283,6 +283,7 @@ const CLICKBAIT_RE = /\b(you should never|the one (command|trick|prompt|thing|se
 const MFG_AI_RE = /\b(predictive maintenance|machine vision|quality inspection|digital twin|smart factory|shop floor|factory floor|CNC|additive manufacturing|3D print(?:ing|ed)?|robotic (?:welding|assembly|inspection)|industrial (?:AI|automation|robots?)|PLM|CAD software|CAM software|generative design|manufacturing (?:AI|software|automation))\b/i;
 /* operational/config changes to tools we run — the "admin email" class of news */
 const CELEB_NOISE = /\b(steve harvey|celebrit(?:y|ies)|kardashian|hollywood|reality (?:tv|show)|talk[- ]show|game[- ]show|(?:tv|movie|film|pop) star|influencers?|red carpet)\b/i;
+const VENDOR_RE = /\b(claude|anthropic|openai|chatgpt|codex|gpt-?\d)\b/i;
 const OPS_RE = /\b(auto.?mode|permissions? (mode|change|default)|defaults? (are )?(changing|changed)|deprecat(ed|ion|ing)?|breaking change|end[- ]of[- ]life|sunset(ting)?|pricing (change|update)|now requires?|managed settings|changelog|new default)\b/i;
 const norm = (x) => (x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const FIN_NOISE = /\b(stocks?|shares?|share price|earnings|dividend|NYSE|NASDAQ|price target|analyst rating|analysts? (?:say|rate|expect)|market cap|sell-?off|hedge fund|portfolio|52-week|strong buy|strong sell|buy rating|hold rating|undervalued|overvalued|bargain|too cheap|bullish|bearish|rall(?:y|ies)|upgraded?|downgraded?|top \d+ (?:AI )?stocks?|trading|traders?|IPO|ticker)\b|seeking ?alpha|motley ?fool|zacks|benzinga|marketbeat|barchart|insider ?monkey|investing\.com|investor.s business daily|simplywall|thestreet|barron|yahoo finance|24.7 ?wall ?st|cramer|\(NASDAQ|\(NYSE|\(ENXT|stock analysis|wall street|cash burn|investor (?:faith|confidence|concerns?|worr)|valuation/i;
@@ -314,10 +315,11 @@ for (const f of FEEDS) {
         + (COMPANY_RE.test(it.title) ? 3 : 0)
         /* practitioner workflow/playbook content is the heaviest-weighted archetype on the hub */
         + (WORKFLOW_RE.test(it.title) ? 5 : (WORKFLOW_RE.test(it.desc || "") ? 2 : 0))
+        + ((WORKFLOW_RE.test(it.title + " " + (it.desc || "")) && VENDOR_RE.test(it.title + " " + (it.desc || ""))) ? 3 : 0)
         /* operational changes to tools the team runs (permission defaults, deprecations,
            pricing, breaking changes) are must-see news and outrank ordinary coverage */
         + ((f.t === "official" && OPS_RE.test(it.title + " " + (it.desc || ""))) ? 4 : 0)
-        + (MFG_AI_RE.test(it.title + " " + (it.desc || "")) ? 2 : 0)
+        + (MFG_AI_RE.test(it.title + " " + (it.desc || "")) ? 3 : 0)
         - (CLICKBAIT_RE.test(it.title) ? 6 : 0);
       posts.push({
         a: f.a, s: f.who || `via ${new URL(f.url).hostname}`, av: f.av, t: f.t,
@@ -495,7 +497,7 @@ merged.forEach(p => {
   if (p.a === "AI Security & Threat Watch" && CELEB_NOISE.test((p.body || "").slice(0, 400))) p._drop = true;
   if (p.a === "Claude Code Changelog" && !/^Claude Code release /.test((p.body || ""))) p._drop = true;
   /* retro-cap the security lane and total weight (boost stacking produced w14-20 outliers) */
-  if (p.a === "AI Security & Threat Watch") p.w = Math.min(Math.max(p.w || 0, 8), 8);
+  if (p.a === "AI Security & Threat Watch") p.w = Math.min(Math.max(p.w || 0, 7), 7);
   p.w = Math.min(p.w || 0, 10);
 });
 /* Bing thumbnails are upscaled from tiny sources — replace with the article's full-res og:image.
