@@ -134,6 +134,15 @@ function renderFeed(){
     sort==="new"?(y.d.localeCompare(x.d)||String(y.ts||"").localeCompare(String(x.ts||""))||POSTS.indexOf(x)-POSTS.indexOf(y)):
     rankDay(y).localeCompare(rankDay(x))||topW(y)-topW(x)||y.d.localeCompare(x.d));
   if(sort==="top")posts=diversify(posts);
+  if(sort==="top"&&posts.length>3){
+    // Guaranteed rotation: the lead story cycles through the current top eight every
+    // hour, so the opening screen is never the same two hours running — jitter alone
+    // couldn't dethrone a story that outweighed the pack.
+    const K=Math.min(8,posts.length);
+    let h=0;for(let i=0;i<hourSeed.length;i++)h=(h*31+hourSeed.charCodeAt(i))>>>0;
+    const rot=h%K;
+    posts=[...posts.slice(rot,K),...posts.slice(0,rot),...posts.slice(K)];
+  }
   if(sort!=="topic")posts=spreadAuthors(posts); // never two consecutive posts from the same source
   if(sort==="top")posts=spreadBy(posts,p=>p.topic); // ...and no runs of a single topic either
   // single unified feed, newest first; role/pill/search are pure filters
