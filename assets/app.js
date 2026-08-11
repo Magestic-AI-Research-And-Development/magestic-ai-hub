@@ -473,12 +473,12 @@ function buildPctBarsSvg(data){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Benchmark scores by model" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
- ["Claude Fable 5",50,true],["Claude Mythos 5",50,true],["GPT-5.6 Sol",30,true],
- ["Claude Opus 5",25,true],["Claude Opus 4.8",25,true],["Kimi K3",15,true],
- ["Gemini 3.1 Pro",12,true],["GPT-5.6 Terra",12,true],["Claude Sonnet 5",10,true],
- ["Gemini 3.5 Flash",9,true],["Qwen3.7 Max",7.5,true],["Grok 4.5",6,true],
- ["Inkling (hosted)",4.68,false],["GLM-5.2 (hosted)",4.4,false],["Muse Spark 1.1",4.25,true],
- ["Kimi K2 (hosted)",3,false],["DeepSeek V4 (hosted)",1.7,false],["GPT-5.6 Luna",1.2,true]
+ ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["GPT-5.5",30,true],
+ ["Claude Opus 5",25,true],["Kimi K3 (open)",15,false],["GPT-5.3-Codex",14,true],
+ ["GPT-5.6 Terra",12,true],["Gemini 3.1 Pro",12,true],["Claude Sonnet 5",10,true],
+ ["Gemini 3.5 Flash",9,true],["Gemini 3.6 Flash",7.5,true],["Grok 4.5",6,true],
+ ["Claude Haiku 4.5",5,true],["MAI-Code-1-Flash",4.5,true],["Kimi K2.7 Code (open)",4,false],
+ ["GPT-5.4 nano",1.25,true],["GPT-5.6 Luna",1.2,true]
 ];
 function buildCostSvg(){
   const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+COST_BARS.length*rowH;

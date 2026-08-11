@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <title>Magestic AI Hub · Research &amp; Learning Platform</title>
-<link rel="stylesheet" href="assets/styles.css?v=58">
+<link rel="stylesheet" href="assets/styles.css?v=59">
 <style>html.authed #authGate{display:none !important}</style>
 <script>
 /* Pre-paint auth check: runs in <head>, before any pixel renders. If a stored
@@ -286,7 +286,7 @@ try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||(location.has
       <h3 style="margin-bottom:2px">What they cost — price per 1M output tokens</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:10px"><span class="sw-key sw-closed-t">&#9632; Closed-weight API</span>&nbsp;&nbsp;<span class="sw-key sw-open-t">&#9632; Open-weight (hosted)</span></p>
       <div id="costChart"></div>
-      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Representative standard (non-batch) list prices, 10 August 2026; hosted open-weight prices vary by provider, and long-context tiers cost more than the headline rate. Claude Sonnet 5's $10 is an introductory rate through 31 August 2026. Note the pattern: near-frontier capability now exists at every price point.</p>
+      <p style="font-size:11.5px;color:var(--ink-3);margin:8px 0 18px">Source: GitHub Copilot billing rates (docs.github.com — Copilot models and pricing), August 2026 — one consistent basis across all vendors: default tier, per 1M output tokens. Long-context tiers cost more; input and cache-token rates differ per model. Note the pattern: near-frontier capability now exists at every price point.</p>
       <h3 style="margin-bottom:2px">The metric that isn't saturating — METR autonomous task horizon</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:10px">How long a software task frontier models complete autonomously at 50% reliability (log scale). This is the number that determines when an agent can carry a real workflow end-to-end.</p>
       <div id="metrChart"></div>
@@ -319,8 +319,8 @@ try{if(localStorage.getItem("sb-yfzeiekuqgruubanksoo-auth-token")||(location.has
 <script src="data/feed-live.js"></script>
 <script src="data/directory.js"></script>
 <script src="data/companies.js"></script>
-<script src="assets/app.js?v=58"></script>
+<script src="assets/app.js?v=59"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';document.head.appendChild(s);"></script>
-<script src="assets/hub.js?v=58"></script>
+<script src="assets/hub.js?v=59"></script>
 </body>
 </html>
