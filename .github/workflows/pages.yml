@@ -3,6 +3,17 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # The feed bot pushes with the built-in GITHUB_TOKEN, and GitHub does NOT
+  # fire `push` events for those commits (loop protection). So a bot feed
+  # refresh never triggered this deploy — the site froze at whatever the last
+  # human/PAT push had deployed. `workflow_run` DOES fire for scheduled runs,
+  # so deploy whenever the feed refresh finishes.
+  workflow_run:
+    workflows: ["Refresh live feed"]
+    types: [completed]
+  # Safety net: redeploy hourly regardless, so a missed trigger self-heals.
+  schedule:
+    - cron: "17 * * * *"
   workflow_dispatch: {}
 
 permissions:
