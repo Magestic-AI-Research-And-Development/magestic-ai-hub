@@ -428,3 +428,69 @@
 @media (max-width:1080px){
   .tab{padding:6px 9px;font-size:11px}
 }
+
+/* ============================================================================
+   MOBILE (phones only, <=760px). Everything below is inside a media query so
+   desktop/laptop rendering is byte-for-byte unchanged. The core problem on
+   phones was the header: .nav-inner is one non-wrapping flex row (logo +
+   wordmark + 6 tabs + live pill + theme + auth), which forced the document
+   ~1100px wide, so mobile browsers zoomed out and every element rendered tiny.
+   Fix: let the header wrap, give the tabs their own horizontally-scrollable
+   row, and stop any child from overflowing the viewport.
+   ========================================================================== */
+@media (max-width:760px){
+  html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
+
+  /* ---- header: wrap into rows instead of overflowing ---- */
+  .nav-inner{flex-wrap:wrap;gap:8px;padding:8px 12px;row-gap:6px}
+  .logo{order:1}
+  .logo-mark,.logo-img{width:30px;height:30px}
+  .hub-center{order:2;margin-right:auto}
+  .hub-center .hub-title{font-size:17px;letter-spacing:2px}
+  .hub-center .hub-sub{display:none}
+  .hub-beta{font-size:9px;letter-spacing:1px}
+  .theme-btn{order:3}
+  .auth-box{order:4;font-size:12px}
+  .live-pill{order:6;font-size:11px;padding:3px 9px;margin:0 auto 0 0}
+  /* tabs get their own full-width row that scrolls sideways */
+  .tabs{order:5;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
+        scrollbar-width:none;padding-bottom:2px;gap:4px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;white-space:nowrap;padding:8px 11px;font-size:12.5px;min-height:38px}
+  .tab svg{width:15px;height:15px}
+
+  /* ---- page shell ---- */
+  .wrap{margin:12px auto;padding:0 10px;gap:14px}
+  .page{padding:0 10px;margin:12px auto}
+  footer{padding:0 12px;margin:20px auto 32px}
+
+  /* ---- every multi-column grid collapses to one column ---- */
+  .stat-row,.grid-2,.dir-grid,.co-grid,.prio-grid{grid-template-columns:minmax(0,1fr)}
+
+  /* ---- feed posts: readable body text, contained media, tappable actions ---- */
+  .post{padding:12px}
+  .post-body,.post p{font-size:15px;line-height:1.55}
+  .post img,.post-img,img{max-width:100%;height:auto}
+  .post-actions{flex-wrap:wrap;gap:4px}
+  .post-actions button,.post-actions a{min-height:40px;padding:8px 10px;font-size:12.5px}
+  .link-card{padding:10px}
+  .link-card b{font-size:13.5px;line-height:1.35}
+
+  /* ---- filter pills + sort row ---- */
+  .pill{padding:7px 12px;font-size:12.5px;min-height:36px}
+  .search-input{max-width:100%}
+
+  /* ---- charts and embeds must fit the viewport ---- */
+  svg{max-width:100%;height:auto}
+  .policy-pdf{height:70vh;min-height:0}
+
+  /* ---- modals: full-width sheets rather than centred cards ---- */
+  .modal-card,#sendModal>div{width:96vw;max-width:96vw;max-height:88vh}
+}
+
+/* Very small phones (<=380px): shave one more notch off the wordmark/tabs. */
+@media (max-width:380px){
+  .hub-center .hub-title{font-size:15px;letter-spacing:1.5px}
+  .tab{padding:7px 9px;font-size:12px}
+  .live-pill{font-size:10.5px}
+}
