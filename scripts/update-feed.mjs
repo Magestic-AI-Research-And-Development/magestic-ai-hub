@@ -21,6 +21,9 @@ const FEEDS = [
   { w: 6, url: "https://github.com/anthropics/claude-code/releases.atom", who: "Claude Code releases & changelog", a: "Claude Code Changelog", av: "anthropic", t: "official", tags: ["Developers"], topic: "Tools", max: 2, noimg: 1, prefix: "Claude Code release " },
   { url: "https://blog.google/technology/ai/rss/", who: "Official Google AI blog", a: "Google AI", av: "google", t: "official", tags: ["Everyone"], topic: "Models", max: 2 },
   { url: "https://github.blog/feed/", who: "Official GitHub blog", a: "GitHub", av: "github", t: "official", tags: ["Developers"], topic: "Tools", max: 3 },
+  // AI Weekly — curated weekly newsletter digest. Issues are weekly, so cap at 2
+  // and skip images (the issue pages have no usable thumbnail).
+  { w: 4, url: "https://aiweekly.co/issues.rss", who: "Curated weekly AI news digest", a: "AI Weekly", av: "auto", t: "industry", tags: ["Everyone"], topic: "Models", max: 2, noimg: 1 },
   { w: 5, url: "https://www.compositesworld.com/rss/news", kw: true, who: "The composites manufacturing industry's leading publication", a: "CompositesWorld", av: "industry", t: "industry", tags: ["Marketing & Sales", "Application Specialists"], topic: "Industry AI", max: 4 },
   { w: 5, url: "https://mtdcnc.com/feed/", kw: true, who: "CNC machining industry news & video (UK)", a: "MTDCNC", av: "industry", t: "industry", tags: ["Developers", "Application Specialists"], topic: "Industry AI", max: 3 },
   /* SMEs & thought leaders with open feeds (max 2 each, all equal) */
