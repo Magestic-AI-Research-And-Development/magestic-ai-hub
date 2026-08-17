@@ -457,16 +457,16 @@ function buildSweSvg(){
 /* Snapshot leaderboards for the two headline reasoning benchmarks.
    [model, score %, closedWeight]. Only models with published scores. */
 const HLE_BARS=[
- ["Claude Fable 5",53.3,true],["Claude Opus 5",52.6,true],["GPT-5.6 Sol",47.2,true],
- ["Claude Opus 4.8",45.7,true],["Muse Spark 1.1",45.1,true],["Gemini 3.1 Pro",44.7,true],
- ["Kimi K3",44.3,true],["Grok 4.5",40.3,true],["GLM-5.2 (open)",40.1,false],
- ["Kimi K2.5 (open)",29.4,false]
+ ["Claude Fable 5",55.5,true],["Claude Opus 5",54.9,true],["GPT-5.6 Sol",49.5,true],
+ ["Claude Opus 4.8",48.7,true],["Gemini 3.1 Pro",47,true],["Kimi K3",46.9,true],
+ ["Muse Spark 1.1",45.1,true],["Grok 4.5",42.7,true],["GLM-5.2 (open)",41.1,false],
+ ["Kimi K2.5 (open)",30.7,false]
 ];
 const ARC2_BARS=[
  ["GPT-5.6 Sol",92.5,true],["Claude Opus 5",90.4,true],["GPT-5.5",85,true],
  ["Gemini 3.1 Deep Think",85,true],["GPT-5.6 Terra",83.9,true],["GPT-5.4 Pro",83.3,true],
- ["Gemini 3.1 Pro",77.1,true],["Claude Opus 4.7",75.8,true],["Claude Opus 4.8",72.1,true],
- ["Claude Opus 4.6",69,true]
+ ["dots3-note Preview (open)",81.4,false],["Gemini 3.1 Pro",77.1,true],
+ ["Claude Opus 4.7",75.8,true],["Claude Opus 4.8",72.1,true],["Claude Opus 4.6",69,true]
 ];
 function buildPctBarsSvg(data){
   const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+data.length*rowH;
@@ -485,9 +485,10 @@ const COST_BARS=[
  ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["GPT-5.5",30,true],
  ["Claude Opus 5",25,true],["Kimi K3 (open)",15,false],["GPT-5.3-Codex",14,true],
  ["GPT-5.6 Terra",12,true],["Gemini 3.1 Pro",12,true],["Claude Sonnet 5",10,true],
- ["Gemini 3.5 Flash",9,true],["Gemini 3.6 Flash",7.5,true],["Grok 4.5",6,true],
+ ["Gemini 3.5 Flash",9,true],["Grok 4.6",6,true],["Grok 4.5",6,true],
  ["Claude Haiku 4.5",5,true],["MAI-Code-1-Flash",4.5,true],["Kimi K2.7 Code (open)",4,false],
- ["GPT-5.4 nano",1.25,true],["GPT-5.6 Luna",1.2,true]
+ ["Gemini 3.6 Flash",3.75,true],["Gemini 3.7 Flash",3.75,true],
+ ["GPT-5.4 nano",1.25,true],["GPT-5.6 Luna",1.2,true],["MAI-Code-1.1-Flash",1.2,true]
 ];
 function buildCostSvg(){
   const W=780,rowH=25,L=190,R=60,T=12,B=30,H=T+B+COST_BARS.length*rowH;
