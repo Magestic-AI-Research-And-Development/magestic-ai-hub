@@ -132,7 +132,7 @@
       box.innerHTML = `<span class="auth-user"><span class="avatar-xs">${initialsOf(n)}</span>${esc(n)}</span>
         <a href="#" class="auth-link" onclick="HUB.signOut();return false;">Sign out</a>`;
     } else {
-      box.innerHTML = `<button class="auth-btn" onclick="HUB.openModal()">Team sign in</button>`;
+      box.innerHTML = `<button class="auth-btn" onclick="HUB.msSignIn()">Sign in</button>`;
     }
   }
 
