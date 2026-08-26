@@ -284,15 +284,33 @@
     async msSignIn(){
       // Entra ID (Azure) SSO via Supabase. On a company machine Edge is already
       // signed into Microsoft at the OS level, so this round-trip is silent.
-      const say = (t) => { const g = document.getElementById("gateMsg"); const m = document.getElementById("hubMsg");
-        const el = (g && !document.getElementById("authGate")?.hidden) ? g : (m || g); if (el) { el.textContent = t; el.className = "hub-msg err"; } };
+      //
+      // We ask Supabase for the authorize URL and navigate ourselves
+      // (skipBrowserRedirect) rather than letting the SDK do it: the SDK's
+      // internal redirect can be swallowed with no visible effect, which looks
+      // exactly like a dead button. Doing it by hand always either navigates or
+      // reports why it could not.
+      const say = (t) => {
+        const el = document.getElementById("gateMsg") || document.getElementById("hubMsg");
+        if (el) { el.textContent = t; el.className = "hub-msg err"; }
+        else { alert(t); }               // no message slot on this path — never fail silently
+        console.error("[hub] sign-in:", t);
+      };
       try {
-        const { error } = await sb.auth.signInWithOAuth({
+        const { data, error } = await sb.auth.signInWithOAuth({
           provider: "azure",
-          options: { scopes: "email openid profile", redirectTo: location.origin + location.pathname }
+          options: {
+            scopes: "email openid profile",
+            redirectTo: location.origin + location.pathname,
+            skipBrowserRedirect: true
+          }
         });
-        if (error) say("Microsoft sign-in isn't set up yet — use your email and password.");
-      } catch (e) { say("Microsoft sign-in failed — use your email and password."); }
+        if (error) { say("Microsoft sign-in error: " + error.message); return; }
+        if (data && data.url) { location.assign(data.url); return; }
+        say("Microsoft sign-in returned no redirect URL — check the Azure provider in Supabase.");
+      } catch (e) {
+        say("Microsoft sign-in failed: " + (e && e.message ? e.message : e));
+      }
     },
     toggleSave(k, el){
       if (!user) { HUB.openModal(); return false; }
