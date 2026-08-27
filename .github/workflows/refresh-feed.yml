@@ -23,16 +23,29 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Regenerate data/feed-live.js
-        run: node scripts/update-feed.mjs
-      - name: Commit if changed
+      - name: Refresh repeatedly inside one run
+        # GitHub's scheduler is the weak link: a "*/10 * * * *" cron on this repo
+        # has in practice fired every 2-6 hours, and once went 23 hours silent.
+        # We can't fix GitHub's queue, but we don't have to depend on it for every
+        # refresh: one run now loops internally, refreshing every ~9 minutes for
+        # ~45 minutes. Even a single scheduled run per hour yields ~5 refreshes,
+        # and consecutive runs overlap into near-continuous coverage.
+        # (Job limit is 6h; this stays far inside it. Free on a public repo.)
         run: |
           git config user.name "hub-bot"
           git config user.email "actions@users.noreply.github.com"
-          if ! git diff --quiet data/feed-live.js; then
-            git add data/feed-live.js
-            git commit -m "chore: feed refresh"
-            git push || (git pull --rebase -X theirs origin main && git push)
-          else
-            echo "No feed changes."
-          fi
+          for i in 1 2 3 4 5; do
+            echo "::group::refresh pass $i of 5"
+            node scripts/update-feed.mjs || echo "pass $i failed, continuing"
+            if ! git diff --quiet data/feed-live.js; then
+              git add data/feed-live.js
+              git commit -m "chore: feed refresh"
+              # Re-pull in case another run committed while we slept.
+              git push || (git pull --rebase -X theirs origin main && git push)
+              echo "pass $i: committed"
+            else
+              echo "pass $i: no changes"
+            fi
+            echo "::endgroup::"
+            if [ "$i" -lt 5 ]; then sleep 540; fi
+          done
