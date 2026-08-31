@@ -418,7 +418,7 @@ const SWE_SERIES=[
  {n:"Open weight frontier",c:"#c96a2b",pts:[
    ["2024-12",42,"DeepSeek V3",0,18,"middle"],["2025-02",49,"DeepSeek R1",6,15,"start"],
    ["2025-07",69.5,"Qwen3-Coder",0,18,"middle"],["2026-02",77.5,"DeepSeek V4 Pro",6,15,"start"],
-   ["2026-07",82.5,"Ornith-1.0",9,4,"start"]]}
+   ["2026-07",82.5,"Ornith-1.0",0,18,"middle"],["2026-08",86,"Ornith-1.5",9,4,"start"]]}
 ];
 function buildSweSvg(){
   const W=820,H=560,L=64,R=150,T=24,B=46;
@@ -482,10 +482,10 @@ function buildPctBarsSvg(data){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Benchmark scores by model" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
- ["Claude Fable 5",50,true],["GPT-5.6 Sol",30,true],["GPT-5.5",30,true],
+ ["Claude Fable 5",50,true],["GPT-5.5",30,true],
  ["Claude Opus 5",25,true],["Kimi K3 (open)",15,false],["GPT-5.3-Codex",14,true],
- ["GPT-5.6 Terra",12,true],["Gemini 3.1 Pro",12,true],["Claude Sonnet 5",10,true],
- ["Gemini 3.5 Flash",9,true],["Grok 4.6",6,true],["Grok 4.5",6,true],
+ ["GPT-5.6 Terra",12,true],["Gemini 3.1 Pro",12,true],["GPT-5.6 Sol",10,true],
+ ["Claude Sonnet 5",10,true],["Gemini 3.5 Flash",9,true],["Grok 4.6",6,true],["Grok 4.5",6,true],
  ["Claude Haiku 4.5",5,true],["MAI-Code-1-Flash",4.5,true],["Kimi K2.7 Code (open)",4,false],
  ["Gemini 3.6 Flash",3.75,true],["Gemini 3.7 Flash",3.75,true],
  ["GPT-5.4 nano",1.25,true],["GPT-5.6 Luna",1.2,true],["MAI-Code-1.1-Flash",1.2,true]
