@@ -395,7 +395,7 @@ function renderDirectory(){
 function showView(v){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
   document.getElementById("view-feed").classList.toggle("hidden",v!=="feed");
-  ["industry","learning","tools","experts","metrics"].forEach(p=>
+  ["industry","learning","tools","experts","metrics","repository","policy"].forEach(p=>
     document.getElementById("view-"+p).classList.toggle("visible",v===p));
   window.scrollTo({top:0});
 }
@@ -457,13 +457,15 @@ function buildSweSvg(){
 /* Snapshot leaderboards for the two headline reasoning benchmarks.
    [model, score %, closedWeight]. Only models with published scores. */
 const HLE_BARS=[
- ["Claude Fable 5",55.5,true],["Claude Opus 5",54.9,true],["GPT-5.6 Sol",49.5,true],
- ["Claude Opus 4.8",48.7,true],["Gemini 3.1 Pro",47,true],["Kimi K3",46.9,true],
+ ["Claude Fable 5.1",59.1,true],["Claude Fable 5",55.5,true],["Claude Opus 5",54.9,true],
+ ["GPT-6 Astra",54.7,true],["GPT-5.6 Sol",49.5,true],["Claude Opus 4.8",48.7,true],
+ ["Gemini 3.8 Flash",47.8,true],["Gemini 3.1 Pro",47,true],["Kimi K3",46.9,true],
  ["Muse Spark 1.1",45.1,true],["Grok 4.5",42.7,true],["GLM-5.2 (open)",41.1,false],
  ["Kimi K2.5 (open)",30.7,false]
 ];
 const ARC2_BARS=[
- ["GPT-5.6 Sol",92.5,true],["Claude Opus 5",90.4,true],["GPT-5.5",85,true],
+ ["GPT-6 Astra",95,true],["GPT-5.6 Sol",92.5,true],["Claude Opus 5",90.4,true],
+ ["Claude Fable 5.1",90,true],["GPT-5.5",85,true],
  ["Gemini 3.1 Deep Think",85,true],["GPT-5.6 Terra",83.9,true],["GPT-5.4 Pro",83.3,true],
  ["dots3-note Preview (open)",81.4,false],["Gemini 3.1 Pro",77.1,true],
  ["Claude Opus 4.7",75.8,true],["Claude Opus 4.8",72.1,true],["Claude Opus 4.6",69,true]
@@ -482,12 +484,12 @@ function buildPctBarsSvg(data){
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Benchmark scores by model" style="width:100%;height:auto">${out.join("")}</svg>`;
 }
 const COST_BARS=[
- ["Claude Fable 5",50,true],["GPT-5.5",30,true],
- ["Claude Opus 5",25,true],["Kimi K3 (open)",15,false],["GPT-5.3-Codex",14,true],
- ["GPT-5.6 Terra",12,true],["Gemini 3.1 Pro",12,true],["GPT-5.6 Sol",10,true],
+ ["Claude Fable 5.1",50,true],["Claude Fable 5",50,true],["GPT-6 Astra",50,true],["GPT-5.5",30,true],
+ ["Claude Opus 5",25,true],["GPT-5.6 Sol",20,true],["Kimi K3 (open)",15,false],["GPT-5.3-Codex",14,true],
+ ["GPT-5.6 Terra",12,true],
  ["Claude Sonnet 5",10,true],["Gemini 3.5 Flash",9,true],["Grok 4.6",6,true],["Grok 4.5",6,true],
  ["Claude Haiku 4.5",5,true],["MAI-Code-1-Flash",4.5,true],["Kimi K2.7 Code (open)",4,false],
- ["Gemini 3.6 Flash",3.75,true],["Gemini 3.7 Flash",3.75,true],
+ ["Gemini 3.6 Flash",3.75,true],["Gemini 3.7 Flash",3.75,true],["Gemini 3.8 Flash",3.75,true],
  ["GPT-5.4 nano",1.25,true],["GPT-5.6 Luna",1.2,true],["MAI-Code-1.1-Flash",1.2,true]
 ];
 function buildCostSvg(){
