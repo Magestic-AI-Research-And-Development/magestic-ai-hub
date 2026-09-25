@@ -346,8 +346,8 @@
 .tools-sec{grid-column:1/-1;margin:18px 2px 2px;font-size:17px;letter-spacing:.3px;color:var(--accent);border-bottom:2px solid var(--border);padding-bottom:6px}
 
 /* ---------- SWE-bench chart ---------- */
-:root{--chart-closed:#1264a3;--chart-open:#a4660e}
-[data-theme="dark"]{--chart-closed:#4a97d4;--chart-open:#c1832a}
+:root{--chart-closed:#1264a3;--chart-open:var(--chart-closed)} /* one colour for every bar (Mac, 25 Sep 2026); "(open)" in the label marks open-weight models */
+[data-theme="dark"]{--chart-closed:#4a97d4;--chart-open:var(--chart-closed)}
 .sw-grid{stroke:var(--border);stroke-width:1}
 .sw-axis{stroke:var(--ink-3);stroke-width:1.2}
 .sw-lab{fill:var(--ink-3);font-size:11px}
