@@ -1,0 +1,45 @@
+name: Supabase keep-alive
+
+# The AI Hub's Supabase project is on the free plan, which pauses a project after
+# about a week without database activity (it happened 25 Sep 2026: the Hub's
+# sign-in page stopped resolving). Supabase says a few database requests a day
+# are enough to stay active, so this reads one row a few times a day.
+#
+# It uses the same publishable key that is already public in assets/hub.js; no
+# secret is needed. With no signed-in user, row-level security returns nothing,
+# but the request still reaches the database, which is what counts as activity.
+#
+# This repo stays active because the feed refresh commits often, so GitHub will
+# not disable this schedule for inactivity. If the job fails, GitHub emails the
+# repo admins; a failure usually means the project was paused anyway: restore it
+# in the Supabase dashboard (Project > Restore) and re-run this job.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours (GitHub may run it later than scheduled)
+  workflow_dispatch: {}       # manual "Run workflow" button
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SUPABASE_URL: https://yfzeiekuqgruubanksoo.supabase.co
+      SUPABASE_KEY: sb_publishable_FH8NK4e7DE4k60tKMGl2RA_GRXZu9tV
+    steps:
+      - name: Read one row from the database
+        run: |
+          code=$(curl -s -o body.txt -w "%{http_code}" --max-time 30 --retry 3 --retry-delay 20 \
+            "$SUPABASE_URL/rest/v1/profiles?select=id&limit=1" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY") || code=000
+          echo "Supabase answered HTTP $code"
+          # Any answer below 500 means the database handled the request (an empty
+          # result or a permission refusal still counts as activity). 000 = the
+          # project address did not resolve (paused); 5xx = the project is down.
+          if [ "$code" = "000" ] || [ "$code" -ge 500 ]; then
+            echo "::error::Supabase did not answer (HTTP $code). The project may be paused: restore it in the Supabase dashboard, then re-run this job."
+            exit 1
+          fi
