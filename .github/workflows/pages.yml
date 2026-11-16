@@ -29,7 +29,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.first_try.outputs.page_url || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,5 +37,14 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: "."
+      # GitHub sometimes cannot find the artifact it has just uploaded ("No artifacts
+      # named github-pages were found"), a known intermittent fault. Try once, and if
+      # that fails wait 30 seconds and try again; only a second failure fails the run.
+      - id: first_try
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - if: steps.first_try.outcome == 'failure'
+        run: sleep 30
       - id: deployment
+        if: steps.first_try.outcome == 'failure'
         uses: actions/deploy-pages@v4
